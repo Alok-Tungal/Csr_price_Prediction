@@ -237,9 +237,9 @@
 
 
 import streamlit as st
-import plotly.express as px
 import pandas as pd
 import random
+import plotly.express as px
 
 # --- APP CONFIGURATION ---
 st.set_page_config(
