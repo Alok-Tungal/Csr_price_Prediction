@@ -19,4 +19,4 @@ google-auth
 openpyxl 
 plotly
 pandas
-import plotly.graph_objects as go
+
