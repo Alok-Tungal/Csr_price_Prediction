@@ -1,1 +1,15 @@
-
+streamlit
+joblib
+numpy
+shap
+matplotlib
+scikit-learn
+streamlit-option-menu
+seaborn
+qrcode
+Pillow
+gspread
+google-auth
+openpyxl 
+plotly
+pandas
