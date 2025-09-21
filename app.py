@@ -235,10 +235,8 @@
 
 import streamlit as st
 import pandas as pd
-import numpy as np
 import joblib
 import os
-import random
 import plotly.graph_objects as go
 
 # --- APP CONFIGURATION ---
@@ -248,22 +246,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- MODEL FILE ---
+# --- MODEL AND DATA ---
 MODEL_FILE = "car_price_predictoR.joblib"
-
-# --- LOAD MODEL ---
-if os.path.exists(MODEL_FILE):
-    try:
-        model_pipeline = joblib.load(MODEL_FILE)
-        st.sidebar.success(f"Loaded pretrained model `{MODEL_FILE}`")
-    except Exception as e:
-        st.sidebar.error(f"❌ Error loading model: {e}")
-        st.stop()
-else:
-    st.sidebar.error(f"Pickle file `{MODEL_FILE}` not found!")
-    st.stop()
-
-# --- CAR DATA ---
 CAR_DATA = {
     "Maruti": ["Swift", "Swift Dzire", "Alto 800", "Wagon R 1.0", "Ciaz", "Ertiga", "Vitara Brezza", "Baleno", "S Cross", "Celerio", "IGNIS"],
     "Mahindra": ["XUV500", "Scorpio", "Thar", "XUV300", "Bolero", "Marazzo", "TUV300"],
@@ -297,16 +281,38 @@ CAR_DATA = {
     "Force": ["Gurkha"]
 }
 
-# --- SHAP-LIKE FEATURE IMPACT PLOT ---
+# --- LOAD MODEL ---
+@st.cache_resource
+def load_model(model_path):
+    """Loads the pre-trained model from a joblib file."""
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found at `{model_path}`!")
+        st.stop()
+    try:
+        model = joblib.load(model_path)
+        return model
+    except Exception as e:
+        st.error(f"❌ Error loading model: {e}")
+        st.stop()
+
+model_pipeline = load_model(MODEL_FILE)
+
+# --- HELPER FUNCTION FOR PLOTTING ---
 def create_shap_plot(inputs, final_price):
-    base_value = 8.0
-    age_contribution = -(inputs['age'] * 0.5)
-    km_contribution = -(inputs['km'] / 50000)
-    fuel_contribution = 1.0 if inputs['fuel'] == 'Diesel' else -0.2
-    transmission_contribution = 1.5 if inputs['transmission'] == 'Automatic' else -0.5
-    
-    contributions = [age_contribution, km_contribution, fuel_contribution, transmission_contribution]
-    features = [f"Age = {inputs['age']} yrs", f"KM Driven = {(inputs['km']/1000):.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
+    """Creates a mock feature impact plot."""
+    base_value = 8.0  # Assuming a base price for visualization
+    contributions = [
+        -(inputs['age'] * 0.5),
+        -(inputs['km'] / 50000),
+        1.0 if inputs['fuel'] == 'Diesel' else -0.2,
+        1.5 if inputs['transmission'] == 'Automatic' else -0.5
+    ]
+    features = [
+        f"Age = {inputs['age']} yrs",
+        f"KM Driven = {(inputs['km']/1000):.1f}k km",
+        f"Fuel = {inputs['fuel']}",
+        f"Transmission = {inputs['transmission']}"
+    ]
     colors = ['#E74C3C' if c < 0 else '#2ECC71' for c in contributions]
 
     fig = go.Figure(go.Bar(
@@ -319,45 +325,64 @@ def create_shap_plot(inputs, final_price):
         title=f"<b>How Features Impact the Price</b><br>Base: ₹{base_value:.2f}L | Final: ₹{final_price:.2f}L",
         xaxis_title="Contribution to Price (in Lakhs)",
         yaxis=dict(autorange="reversed"),
+        template="plotly_dark",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font_color="white",
         margin=dict(l=120, r=20, t=60, b=50)
     )
     return fig
 
 # --- STREAMLIT UI ---
 st.title("🏎️ Car Price Prediction & Analysis")
+st.markdown("Enter the details of the car to get a predicted price from our trained model.")
 
-col1, col2 = st.columns([1, 1])
+col1, col2 = st.columns([1, 1.2]) # Give the right column a bit more space
+
 with col1:
     st.subheader("Enter Car Details")
     brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
     model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand]))
-    age = st.number_input("Car Age (years)", 0, 25, 5)
-    km_driven = st.number_input("KM Driven", 0, 500000, 50000, step=1000)
+    age = st.number_input("Car Age (years)", 1, 25, 5, help="How old is the car in years?")
+    km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
     fuel_type = st.selectbox("Fuel Type", options=['Petrol', 'Diesel', 'CNG', 'Electric', 'LPG'])
     transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
     ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
-    predict_button = st.button("Predict Price")
+    
+    predict_button = st.button("Predict Price", type="primary", use_container_width=True)
 
 with col2:
     st.subheader("Prediction Result")
     if predict_button:
-        inputs = {'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}
+        # 1. Create a dictionary with the EXACT column names the model expects
+        input_data = {
+            'Car_Brand': [brand],
+            'Car_Model': [model],
+            'Car_Age': [age],
+            'KM Driven': [km_driven],
+            'Fuel Type': [fuel_type],
+            'Transmission Type': [transmission],
+            'Ownership': [ownership]
+        }
+        
         try:
-            # Use your trained model
-            new_data = pd.DataFrame([inputs])
-            predicted_price = model_pipeline.predict(new_data)[0]
+            # 2. Convert the dictionary to a DataFrame
+            input_df = pd.DataFrame(input_data)
+            
+            # 3. Use the trained model pipeline to predict
+            predicted_price = model_pipeline.predict(input_df)[0]
+            
+            # 4. Display the result
             st.success(f"### Predicted Price: ₹ {predicted_price:.2f} Lakhs")
             
-            shap_fig = create_shap_plot(inputs, predicted_price)
+            # 5. Create and display the explanation plot
+            plot_inputs = {'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}
+            shap_fig = create_shap_plot(plot_inputs, predicted_price)
             st.plotly_chart(shap_fig, use_container_width=True)
+
         except Exception as e:
-            st.error(f"Prediction failed: {e}")
+            st.error(f"An error occurred during prediction: {e}")
     else:
         st.info("Click 'Predict Price' after entering the details to see the result.")
-
 
 
 
