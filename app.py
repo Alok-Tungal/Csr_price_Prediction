@@ -391,9 +391,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import os
-import io
 import joblib
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import OneHotEncoder
@@ -402,23 +401,15 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import plotly.express as px
 
+st.set_page_config(page_title="Car Price Prediction", layout="wide")
+
 MODEL_PATH = "model.pkl"
 
-st.set_page_config(page_title="Car Price Prediction & Analysis", layout="wide")
+st.title("🚗 Car Price Prediction & Analysis (Auto-loaded Data)")
 
-st.title("🚗 Car Price Prediction & Analysis (Streamlit)")
-
-# Sidebar: Upload / sample
-st.sidebar.header("Data / Model")
-uploaded_file = st.sidebar.file_uploader("Upload CSV dataset (must contain selling_price)", type=["csv"])
-
-use_sample = st.sidebar.checkbox("Use sample dataset (if no upload)", value=False)
-train_model_button = st.sidebar.button("Train model (force)")
-download_model_button = st.sidebar.button("Download trained model (model.pkl)")
-
+# 🔹 Auto-load dataset (replace with your real dataset if needed)
 @st.cache_data
-def load_sample_data():
-    # Tiny synthetic/sample dataset for quick demo. Replace with real CSV upload.
+def load_data():
     data = {
         "name": ["car_a", "car_b", "car_c","car_d","car_e"],
         "year": [2012, 2015, 2018, 2016, 2014],
@@ -431,226 +422,77 @@ def load_sample_data():
     }
     return pd.DataFrame(data)
 
-def load_data():
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        st.sidebar.success("Uploaded dataset loaded.")
-    elif use_sample:
-        df = load_sample_data()
-        st.sidebar.info("Using sample dataset.")
-    else:
-        df = None
-    return df
-
 df = load_data()
 
-if df is None:
-    st.info("Upload your CSV dataset in the left sidebar OR check 'Use sample dataset'. Dataset must include target column `selling_price`.")
-    st.stop()
+# Show dataset
+st.subheader("Dataset Preview")
+st.dataframe(df)
 
-# Basic preview
-st.header("Dataset preview")
-st.write(f"Rows: {df.shape[0]} — Columns: {df.shape[1]}")
-st.dataframe(df.head(10))
-
-# Basic cleaning hint
-st.sidebar.header("Cleaning")
-drop_na = st.sidebar.checkbox("Drop rows with NA in target (selling_price)", value=True)
-if drop_na:
-    before = df.shape[0]
-    df = df.dropna(subset=["selling_price"])
-    st.sidebar.write(f"Dropped {before - df.shape[0]} rows with missing target")
-
-# EDA Section
-st.header("Exploratory Data Analysis (interactive)")
-
-# Numeric columns
-numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-categorical_cols = df.select_dtypes(include=['object','category']).columns.tolist()
-
-# Price distribution
-if "selling_price" in df.columns:
-    st.subheader("Selling Price Distribution")
-    fig = px.histogram(df, x="selling_price", nbins=50, title="Selling Price Distribution")
-    st.plotly_chart(fig, use_container_width=True)
-
-# Scatter: year vs price
-if "year" in df.columns and "selling_price" in df.columns:
-    st.subheader("Selling Price vs Year")
-    color_col = st.selectbox("Color by (categorical)", options=[None] + categorical_cols, index=0)
-    if color_col:
-        fig2 = px.scatter(df, x="year", y="selling_price", color=color_col, hover_data=df.columns, title="Price by Year")
-    else:
-        fig2 = px.scatter(df, x="year", y="selling_price", hover_data=df.columns, title="Price by Year")
-    st.plotly_chart(fig2, use_container_width=True)
-
-# Boxplot for categorical features
-st.subheader("Price by categorical features")
-cat_for_box = st.multiselect("Choose categorical columns to show boxplots", options=categorical_cols, default=categorical_cols[:2])
-for c in cat_for_box:
-    if c in df.columns:
-        fig = px.box(df, x=c, y="selling_price", title=f"Selling Price by {c}")
-        st.plotly_chart(fig, use_container_width=True)
-
-# Correlation heatmap for numeric features
-st.subheader("Correlation heatmap (numeric)")
-if len(numeric_cols) >= 2:
-    corr = df[numeric_cols].corr()
-    fig = px.imshow(corr, text_auto=True, title="Correlation Heatmap")
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.write("Not enough numeric columns for correlation heatmap.")
-
-# Feature selection UI
-st.header("Modeling: Select features & train")
-all_features = st.multiselect("Choose predictor features (columns)", options=[c for c in df.columns if c != "selling_price"], default=[c for c in df.columns if c not in ["name","selling_price"]][:5])
+# Features
 target = "selling_price"
-if target not in df.columns:
-    st.error("Dataset must contain 'selling_price' as target column.")
-    st.stop()
-if len(all_features) == 0:
-    st.warning("Pick at least one feature to train model.")
-    st.stop()
+features = [c for c in df.columns if c != target and c != "name"]
 
-# Prepare data
-X = df[all_features].copy()
-y = df[target].copy()
+X = df[features]
+y = df[target]
 
-# Simple preprocessing: separate categorical and numeric
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Preprocess
 num_cols = X.select_dtypes(include=[np.number]).columns.tolist()
-cat_cols = X.select_dtypes(include=['object','category']).columns.tolist()
-
-st.write(f"Using {len(num_cols)} numeric and {len(cat_cols)} categorical features.")
-
-# Build pipeline
-numerical_transformer = "passthrough"
-categorical_transformer = OneHotEncoder(handle_unknown="ignore", sparse=False)
+cat_cols = X.select_dtypes(exclude=[np.number]).columns.tolist()
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ("num", numerical_transformer, num_cols),
-        ("cat", categorical_transformer, cat_cols),
-    ],
-    remainder="drop",
+        ("num", "passthrough", num_cols),
+        ("cat", OneHotEncoder(handle_unknown="ignore", sparse=False), cat_cols)
+    ]
 )
 
-model_pipeline = Pipeline(steps=[
+# Model pipeline
+pipeline = Pipeline([
     ("preprocessor", preprocessor),
     ("regressor", RandomForestRegressor(n_estimators=100, random_state=42))
 ])
 
-# Train / test split UI
-test_size = st.slider("Test set size (fraction)", min_value=0.05, max_value=0.5, value=0.2, step=0.05)
-random_state = st.number_input("Random state (int)", min_value=0, max_value=9999, value=42, step=1)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-
-# Train model control
-if (not os.path.exists(MODEL_PATH)) or train_model_button:
-    st.info("Training model — this may take a little while depending on dataset size...")
-    model_pipeline.fit(X_train, y_train)
-    joblib.dump(model_pipeline, MODEL_PATH)
-    st.success(f"Model trained and saved to `{MODEL_PATH}`")
+# Train or load model
+if os.path.exists(MODEL_PATH):
+    pipeline = joblib.load(MODEL_PATH)
 else:
-    # load existing
-    try:
-        model_pipeline = joblib.load(MODEL_PATH)
-        st.success(f"Loaded model from `{MODEL_PATH}`")
-    except Exception as e:
-        st.warning("Failed to load saved model; training a new one.")
-        model_pipeline.fit(X_train, y_train)
-        joblib.dump(model_pipeline, MODEL_PATH)
-        st.success(f"Model trained and saved to `{MODEL_PATH}`")
+    pipeline.fit(X_train, y_train)
+    joblib.dump(pipeline, MODEL_PATH)
 
 # Evaluate
-st.subheader("Model evaluation")
-y_pred = model_pipeline.predict(X_test)
+y_pred = pipeline.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 r2 = r2_score(y_test, y_pred)
 
+st.subheader("Model Performance")
 st.metric("MAE", f"{mae:.2f}")
 st.metric("RMSE", f"{rmse:.2f}")
 st.metric("R²", f"{r2:.3f}")
 
-# Residual plot
-residuals = y_test - y_pred
-fig_res = px.scatter(x=y_pred, y=residuals, labels={"x":"Predicted", "y":"Residuals"}, title="Residuals vs Predicted")
-fig_res.add_hline(y=0, line_dash="dash")
-st.plotly_chart(fig_res, use_container_width=True)
+# Plots
+st.subheader("EDA - Visualizations")
+fig = px.histogram(df, x="selling_price", nbins=10, title="Distribution of Car Prices")
+st.plotly_chart(fig, use_container_width=True)
 
-# Actual vs Predicted
-fig_avp = px.scatter(x=y_test, y=y_pred, labels={"x":"Actual", "y":"Predicted"}, title="Actual vs Predicted")
-fig_avp.add_shape(type="line", x0=y_test.min(), x1=y_test.max(), y0=y_test.min(), y1=y_test.max(), line=dict(dash="dash"))
-st.plotly_chart(fig_avp, use_container_width=True)
+fig2 = px.scatter(df, x="year", y="selling_price", color="fuel", title="Price vs Year")
+st.plotly_chart(fig2, use_container_width=True)
 
-# Feature importance (if underlying model supports)
-st.subheader("Feature importance (if available)")
-try:
-    # For RandomForestRegressor in pipeline -> named_steps
-    reg = model_pipeline.named_steps["regressor"]
-    pre = model_pipeline.named_steps["preprocessor"]
-    # Get feature names after one-hot
-    feature_names = []
-    if num_cols:
-        feature_names.extend(list(num_cols))
-    if cat_cols:
-        # get encoder categories
-        enc = pre.named_transformers_["cat"]
-        if hasattr(enc, "get_feature_names_out"):
-            cat_names = enc.get_feature_names_out(cat_cols).tolist()
-        else:
-            # fallback
-            cat_names = []
-            for col, cats in zip(cat_cols, enc.categories_):
-                cat_names.extend([f"{col}_{c}" for c in cats])
-        feature_names.extend(cat_names)
-    importances = reg.feature_importances_
-    fi_df = pd.DataFrame({"feature": feature_names, "importance": importances})
-    fi_df = fi_df.sort_values("importance", ascending=False).head(30)
-    fig_fi = px.bar(fi_df, x="importance", y="feature", orientation="h", title="Top feature importances")
-    st.plotly_chart(fig_fi, use_container_width=True)
-except Exception as e:
-    st.write("Feature importance not available for this model or pipeline.")
-
-# Single-prediction UI
-st.header("Make a single prediction")
-st.write("Enter feature values below (matching selected features).")
-input_vals = {}
+# Prediction UI
+st.subheader("🔮 Predict Car Price")
+inputs = {}
 cols = st.columns(2)
-for i, col in enumerate(all_features):
+for i, col in enumerate(features):
     with cols[i % 2]:
         if col in num_cols:
-            input_vals[col] = st.number_input(col, value=float(X[col].median() if X[col].notnull().any() else 0.0))
+            inputs[col] = st.number_input(col, value=float(X[col].median()))
         else:
-            unique_vals = X[col].dropna().unique().tolist()
-            default_idx = 0
-            if unique_vals:
-                input_vals[col] = st.selectbox(col, options=unique_vals, index=default_idx)
-            else:
-                input_vals[col] = st.text_input(col, value="")
+            inputs[col] = st.selectbox(col, df[col].unique().tolist())
 
-if st.button("Predict price"):
-    input_df = pd.DataFrame([input_vals])
-    try:
-        pred_value = model_pipeline.predict(input_df)[0]
-        st.success(f"Predicted selling price: ₹{pred_value:,.0f}")
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
-
-# Allow model download
-if download_model_button:
-    if os.path.exists(MODEL_PATH):
-        with open(MODEL_PATH, "rb") as f:
-            btn = st.download_button(label="Download model.pkl", data=f, file_name="model.pkl", mime="application/octet-stream")
-    else:
-        st.warning("Model file not found. Train model first.")
-
-# End of app
-st.markdown("---")
-st.caption("App generated for Hugging Face / Streamlit deployment. Adapt features & preprocess pipelines to match your real dataset columns.")
-
-
-
-
+if st.button("Predict"):
+    new_df = pd.DataFrame([inputs])
+    pred = pipeline.predict(new_df)[0]
+    st.success(f"Predicted Price: ₹{pred:,.0f}")
