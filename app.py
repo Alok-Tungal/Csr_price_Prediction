@@ -1257,255 +1257,394 @@
 
 
 
+# import streamlit as st
+# import pandas as pd
+# import random
+# import plotly.express as px
+# import joblib
+# import os
+# import numpy as np
+
+# # --- 1. APP CONFIGURATION ---
+# st.set_page_config(
+#     page_title="Car Price Prediction & Analysis",
+#     page_icon="🏎️",
+#     layout="wide",
+#     initial_sidebar_state="expanded"
+# )
+
+# # --- 2. LOAD MODEL & DATA ---
+# MODEL_FILE = "car_price_predictoR.joblib"
+
+# @st.cache_resource
+# def load_model(model_path):
+#     """Load the pre-trained model, return None if it doesn't exist."""
+#     if os.path.exists(model_path):
+#         try:
+#             return joblib.load(model_path)
+#         except Exception as e:
+#             st.sidebar.error(f"Error loading model: {e}")
+#             return None
+#     return None
+
+# model_pipeline = load_model(MODEL_FILE)
+# if model_pipeline:
+#     st.sidebar.success("✅ Trained model loaded successfully!")
+# else:
+#     st.sidebar.warning("⚠️ Trained model not found. Using mock prediction logic.")
+
+# # Using a simplified version for mock data generation
+# ALL_BRANDS = ["Maruti", "Hyundai", "Honda", "Mahindra", "Tata", "Ford", "Toyota", "Renault", "Volkswagen", "BMW"]
+# CAR_DATA = {
+#     "Maruti": {"Swift": ["Petrol", "Diesel"], "Baleno": ["Petrol"]},
+#     "Hyundai": {"i20": ["Petrol", "Diesel"], "Creta": ["Petrol", "Diesel"]},
+#     "Honda": {"City": ["Petrol"], "Amaze": ["Petrol", "Diesel"]},
+#     "Mahindra": {"XUV500": ["Diesel"], "Scorpio": ["Diesel"]},
+#     "Tata": {"Nexon": ["Petrol", "Diesel"], "Harrier": ["Diesel"]},
+#     "Ford": {"EcoSport": ["Petrol", "Diesel"], "Endeavour": ["Diesel"]},
+#     "Toyota": {"Innova Crysta": ["Diesel"], "Fortuner": ["Diesel"]},
+#     "Renault": {"Kwid": ["Petrol"], "Duster": ["Petrol"]},
+#     "Volkswagen": {"Polo": ["Petrol", "Diesel"], "Vento": ["Petrol"]},
+#     "BMW": {"3 Series": ["Petrol", "Diesel"], "X1": ["Diesel"]},
+# }
+
+# # --- 3. PREDICTION & PLOTTING FUNCTIONS ---
+# def predict_car_price(brand, model, age, km_driven, fuel, transmission, ownership):
+#     """Predicts car price using the loaded model or a mock function."""
+#     if model_pipeline:
+#         # Use the actual trained model if it's loaded
+#         input_data = pd.DataFrame({
+#             'Car_Brand': [brand], 'Car_Model': [model], 'Car_Age': [age],
+#             'KM Driven': [km_driven], 'Fuel Type': [fuel],
+#             'Transmission Type': [transmission], 'Ownership': [ownership]
+#         })
+#         return model_pipeline.predict(input_data)[0]
+#     else:
+#         # Fallback to mock logic if the model file is not found
+#         base_price = 8.0 - (age * 0.5) - (km_driven / 50000)
+#         if fuel == 'Diesel': base_price += 1.0
+#         if transmission == 'Automatic': base_price += 1.5
+#         if ownership == 'Second Owner': base_price -= 1.0
+#         elif ownership == 'Third Owner': base_price -= 2.0
+#         return max(1.5, base_price + (random.random() - 0.5))
+
+# def create_shap_plot(inputs, final_price):
+#     """Creates a mock feature impact plot for visualization."""
+#     base_value = 8.0
+#     contributions = [
+#         -(inputs['age'] * 0.5),
+#         -(inputs['km'] / 50000),
+#         1.0 if inputs['fuel'] == 'Diesel' else -0.2,
+#         1.5 if inputs['transmission'] == 'Automatic' else -0.5
+#     ]
+#     features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km",
+#                 f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
+#     df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
+#     df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
+#     fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
+#                  title=f"<b>Feature Impact on Price</b><br>Base: ₹{base_value:.2f}L | Final: ₹{final_price:.2f}L",
+#                  text='Contribution', template="plotly_white")
+#     fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
+#     fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
+#     return fig
+
+# # --- 4. SIDEBAR NAVIGATION ---
+# st.sidebar.title("📌 Navigation")
+# page = st.sidebar.radio("Go to", ["About Me", "The Project", "Data Insights", "Price Predictor"])
+# st.sidebar.info("This app demonstrates a complete ML project pipeline for predicting used car prices.")
+
+# # --- 5. PAGE CONTENT ---
+
+# # --- PAGE 1: ABOUT ME ---
+# if page == "About Me":
+#     st.title("👋 About Me")
+#     st.markdown("---")
+#     col1, col2 = st.columns([2, 1.5], gap="large")
+#     with col1:
+#         st.header("Alok Mahadev Tungal")
+#         st.markdown("""
+#         A passionate **Data Scientist** and **Machine Learning Engineer** with a knack for turning complex datasets into actionable insights. My journey in tech is driven by a relentless curiosity and a desire to build intelligent solutions that solve real-world problems.
+
+#         This application is a demonstration of an end-to-end machine learning project, from data exploration to model deployment.
+#         """)
+#         st.markdown("#### Key Skills:")
+#         st.code("""
+# - Python (Pandas, NumPy, Scikit-learn, TensorFlow)
+# - Machine Learning (Regression, Classification, Clustering)
+# - Data Visualization (Plotly, Matplotlib, Seaborn)
+# - Web Frameworks (Streamlit, Flask)
+# - Databases (SQL)
+#         """)
+#         st.markdown("#### Find me on:")
+#         st.markdown("[LinkedIn](https://www.linkedin.com/) | [GitHub](https://github.com/) | [HuggingFace](https://huggingface.co/)")
+
+#     with col2:
+#         st.image("https://placehold.co/500x500/4F46E5/FFFFFF?text=AMT",
+#                  caption="Alok Mahadev Tungal", use_column_width=True)
+
+# # --- PAGE 2: THE PROJECT ---
+# elif page == "The Project":
+#     st.title("📊 The Project: Used Car Price Prediction")
+#     st.markdown("---")
+#     st.markdown("### Project Goal")
+#     st.info("The primary objective of this project is to develop a robust machine learning model that can accurately predict the price of used cars based on their features like brand, model, age, mileage, and fuel type.")
+
+#     st.markdown("### Methodology")
+#     st.markdown("""
+#     The project follows a standard data science pipeline, ensuring a structured and effective workflow from start to finish.
+#     """)
+#     with st.expander("Click to see the detailed project pipeline"):
+#         st.write("""
+#         1.  **📝 Data Collection:** The dataset was sourced from a public repository, containing over 9,000 listings of used cars across India.
+#         2.  **🧹 Data Cleaning & Preprocessing:** Handled missing values, removed duplicates, and corrected data types to prepare the data for analysis.
+#         3.  **📈 Exploratory Data Analysis (EDA):** Generated various visualizations to understand the relationships between different car features and their impact on price. Key insights were drawn from distributions, correlations, and categorical breakdowns.
+#         4.  **🛠️ Feature Engineering:** Created new features like 'Car Age' from the 'Year' of manufacture to improve model performance. Categorical features were encoded using techniques like one-hot encoding.
+#         5.  **🤖 Model Training & Selection:** Trained several regression models, including Linear Regression, Random Forest, and Gradient Boosting. **XGBoost Regressor** was selected as the final model due to its superior performance.
+#         6.  **튜닝 Hyperparameter Tuning:** Used techniques like GridSearchCV to find the optimal set of hyperparameters for the XGBoost model, boosting its accuracy from 94% to **96% (R² Score)**.
+#         7.  **🚀 Deployment:** The trained model was serialized using `joblib` and deployed as an interactive web application using **Streamlit**, hosted on **Hugging Face Spaces**.
+#         """)
+#     col1, col2, col3 = st.columns(3)
+#     col1.metric("Dataset Rows", "9,176")
+#     col2.metric("Features Used", "7")
+#     col3.metric("Best Model", "XGBoost (96% R²)")
+
+
+# # --- PAGE 3: DATA INSIGHTS / EDA ---
+# elif page == "Data Insights":
+#     st.title("📈 Exploratory Data Analysis (EDA)")
+#     st.markdown("---")
+
+#     @st.cache_data
+#     def generate_mock_data(n=500):
+#         """Generates a more detailed mock DataFrame for EDA."""
+#         data = {
+#             'Price': np.random.uniform(2.5, 45.0, n),
+#             'Age': np.random.randint(1, 12, n),
+#             'KM Driven': np.random.randint(10000, 150000, n),
+#             'Brand': [random.choice(ALL_BRANDS) for _ in range(n)],
+#             'Fuel Type': [random.choice(['Petrol', 'Diesel']) for _ in range(n)],
+#             'Transmission': [random.choice(['Manual', 'Automatic']) for _ in range(n)],
+#             'Ownership': [random.choice(['First Owner', 'Second Owner', 'Third Owner']) for _ in range(n)]
+#         }
+#         return pd.DataFrame(data)
+
+#     df = generate_mock_data()
+
+#     # Create two columns for a cleaner layout
+#     col1, col2 = st.columns([1, 2])
+    
+#     with col1:
+#         st.subheader("Select a Visualization")
+#         plot_choice = st.radio(
+#             "Choose a chart:",
+#             [
+#                 "Correlation Heatmap",
+#                 "Price Distribution by Fuel Type",
+#                 "Price vs. Car Age",
+#                 "Price by Ownership Type"
+#             ]
+#         )
+
+#     with col2:
+#         if plot_choice == "Correlation Heatmap":
+#             st.subheader("Numerical Feature Correlation")
+#             corr = df[['Price', 'Age', 'KM Driven']].corr()
+#             fig = px.imshow(corr, text_auto=True, aspect="auto",
+#                             title="Heatmap of Price, Age, and Mileage", color_continuous_scale='RdBu_r')
+#             st.plotly_chart(fig, use_container_width=True)
+
+#         elif plot_choice == "Price Distribution by Fuel Type":
+#             st.subheader("Price Distribution: Petrol vs. Diesel")
+#             fig = px.box(df, x='Fuel Type', y='Price', color='Fuel Type',
+#                          title="Median Price for Petrol vs. Diesel Cars",
+#                          labels={"Price": "Price (in Lakhs)"})
+#             st.plotly_chart(fig, use_container_width=True)
+
+#         elif plot_choice == "Price vs. Car Age":
+#             st.subheader("Price Depreciation Over Time")
+#             fig = px.scatter(df, x='Age', y='Price', color='Brand',
+#                              title="Price vs. Age of Car",
+#                              labels={"Price": "Price (in Lakhs)", "Age": "Age (Years)"})
+#             st.plotly_chart(fig, use_container_width=True)
+
+#         elif plot_choice == "Price by Ownership Type":
+#             st.subheader("Impact of Ownership on Price")
+#             fig = px.box(df, x='Ownership', y='Price', color='Ownership',
+#                          title="Price Distribution by Number of Owners",
+#                          labels={"Price": "Price (in Lakhs)"},
+#                          category_orders={"Ownership": ["First Owner", "Second Owner", "Third Owner"]})
+#             st.plotly_chart(fig, use_container_width=True)
+
+# # --- PAGE 4: PRICE PREDICTOR ---
+# elif page == "Price Predictor":
+#     st.title("🔮 Price Predictor")
+#     st.markdown("---")
+#     st.markdown("Fill in the car's details below to get an estimated market price.")
+
+#     col1, col2 = st.columns([1, 1.2])
+
+#     with col1:
+#         st.subheader("Enter Car Details")
+#         brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
+#         model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
+#         fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
+#         age = st.number_input("Car Age (years)", 1, 25, 5)
+#         km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
+#         transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
+#         ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
+#         predict_button = st.button("Predict Price", type="primary", use_container_width=True)
+
+#     with col2:
+#         st.subheader("Prediction Result")
+#         if predict_button:
+#             price = predict_car_price(brand, model, age, km_driven, fuel_type, transmission, ownership)
+#             st.success(f"### Predicted Price: ₹ {price:.2f} Lakhs")
+#             with st.expander("See Feature Impact on Price"):
+#                 fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
+#                 st.plotly_chart(fig, use_container_width=True)
+#         else:
+#             st.info("Enter the car details and click 'Predict Price' to see the estimated value.")
+
+
+
 import streamlit as st
 import pandas as pd
-import random
-import plotly.express as px
-import joblib
-import os
 import numpy as np
+import plotly.graph_objects as go
+import plotly.express as px
 
-# --- 1. APP CONFIGURATION ---
+# --- PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Car Price Prediction & Analysis",
-    page_icon="🏎️",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Interactive Churn Dashboard",
+    page_icon="🧭",
+    layout="wide"
 )
 
-# --- 2. LOAD MODEL & DATA ---
-MODEL_FILE = "car_price_predictoR.joblib"
+# --- DATA GENERATION ---
+@st.cache_data
+def generate_mock_data(num_customers=200):
+    data = {
+        'CustomerID': [f'CUST-{1000+i}' for i in range(num_customers)],
+        'MonthlyContractValue': np.random.randint(500, 5000, num_customers),
+        'TenureMonths': np.random.randint(1, 72, num_customers),
+        'SupportTickets': np.random.randint(0, 15, num_customers),
+        'ProductUsageScore': np.random.randint(1, 100, num_customers),
+    }
+    df = pd.DataFrame(data)
+    
+    risk_score = ( (50 / (df['TenureMonths'] + 1)) + (df['SupportTickets'] * 5) - (df['ProductUsageScore'] * 0.5) )
+    df['ChurnRiskScore'] = np.clip((risk_score / risk_score.max()) * 100, 5, 98)
 
-@st.cache_resource
-def load_model(model_path):
-    """Load the pre-trained model, return None if it doesn't exist."""
-    if os.path.exists(model_path):
-        try:
-            return joblib.load(model_path)
-        except Exception as e:
-            st.sidebar.error(f"Error loading model: {e}")
-            return None
-    return None
-
-model_pipeline = load_model(MODEL_FILE)
-if model_pipeline:
-    st.sidebar.success("✅ Trained model loaded successfully!")
-else:
-    st.sidebar.warning("⚠️ Trained model not found. Using mock prediction logic.")
-
-# Using a simplified version for mock data generation
-ALL_BRANDS = ["Maruti", "Hyundai", "Honda", "Mahindra", "Tata", "Ford", "Toyota", "Renault", "Volkswagen", "BMW"]
-CAR_DATA = {
-    "Maruti": {"Swift": ["Petrol", "Diesel"], "Baleno": ["Petrol"]},
-    "Hyundai": {"i20": ["Petrol", "Diesel"], "Creta": ["Petrol", "Diesel"]},
-    "Honda": {"City": ["Petrol"], "Amaze": ["Petrol", "Diesel"]},
-    "Mahindra": {"XUV500": ["Diesel"], "Scorpio": ["Diesel"]},
-    "Tata": {"Nexon": ["Petrol", "Diesel"], "Harrier": ["Diesel"]},
-    "Ford": {"EcoSport": ["Petrol", "Diesel"], "Endeavour": ["Diesel"]},
-    "Toyota": {"Innova Crysta": ["Diesel"], "Fortuner": ["Diesel"]},
-    "Renault": {"Kwid": ["Petrol"], "Duster": ["Petrol"]},
-    "Volkswagen": {"Polo": ["Petrol", "Diesel"], "Vento": ["Petrol"]},
-    "BMW": {"3 Series": ["Petrol", "Diesel"], "X1": ["Diesel"]},
-}
-
-# --- 3. PREDICTION & PLOTTING FUNCTIONS ---
-def predict_car_price(brand, model, age, km_driven, fuel, transmission, ownership):
-    """Predicts car price using the loaded model or a mock function."""
-    if model_pipeline:
-        # Use the actual trained model if it's loaded
-        input_data = pd.DataFrame({
-            'Car_Brand': [brand], 'Car_Model': [model], 'Car_Age': [age],
-            'KM Driven': [km_driven], 'Fuel Type': [fuel],
-            'Transmission Type': [transmission], 'Ownership': [ownership]
-        })
-        return model_pipeline.predict(input_data)[0]
-    else:
-        # Fallback to mock logic if the model file is not found
-        base_price = 8.0 - (age * 0.5) - (km_driven / 50000)
-        if fuel == 'Diesel': base_price += 1.0
-        if transmission == 'Automatic': base_price += 1.5
-        if ownership == 'Second Owner': base_price -= 1.0
-        elif ownership == 'Third Owner': base_price -= 2.0
-        return max(1.5, base_price + (random.random() - 0.5))
-
-def create_shap_plot(inputs, final_price):
-    """Creates a mock feature impact plot for visualization."""
-    base_value = 8.0
-    contributions = [
-        -(inputs['age'] * 0.5),
-        -(inputs['km'] / 50000),
-        1.0 if inputs['fuel'] == 'Diesel' else -0.2,
-        1.5 if inputs['transmission'] == 'Automatic' else -0.5
+    conditions = [
+        (df['SupportTickets'] > 10),
+        (df['ProductUsageScore'] < 20),
+        (df['TenureMonths'] < 6)
     ]
-    features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km",
-                f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
-    df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
-    df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
-    fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
-                 title=f"<b>Feature Impact on Price</b><br>Base: ₹{base_value:.2f}L | Final: ₹{final_price:.2f}L",
-                 text='Contribution', template="plotly_white")
-    fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
-    fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
-    return fig
+    choices = ['High Support Tickets', 'Low Product Usage', 'New Customer Risk']
+    df['TopChurnDriver'] = np.select(conditions, choices, default='Multiple Factors')
+    
+    return df
 
-# --- 4. SIDEBAR NAVIGATION ---
-st.sidebar.title("📌 Navigation")
-page = st.sidebar.radio("Go to", ["About Me", "The Project", "Data Insights", "Price Predictor"])
-st.sidebar.info("This app demonstrates a complete ML project pipeline for predicting used car prices.")
+df = generate_mock_data()
 
-# --- 5. PAGE CONTENT ---
+# --- SIDEBAR FOR CONTROLS ---
+st.sidebar.title("🧭 Dashboard Controls")
+st.sidebar.markdown("Use the controls below to filter the dashboard view.")
 
-# --- PAGE 1: ABOUT ME ---
-if page == "About Me":
-    st.title("👋 About Me")
-    st.markdown("---")
-    col1, col2 = st.columns([2, 1.5], gap="large")
-    with col1:
-        st.header("Alok Mahadev Tungal")
-        st.markdown("""
-        A passionate **Data Scientist** and **Machine Learning Engineer** with a knack for turning complex datasets into actionable insights. My journey in tech is driven by a relentless curiosity and a desire to build intelligent solutions that solve real-world problems.
+risk_threshold = st.sidebar.slider(
+    'Set Churn Risk Threshold',
+    min_value=0, max_value=100, value=75,
+    help="Customers with a risk score above this value will be flagged as 'High Risk'."
+)
 
-        This application is a demonstration of an end-to-end machine learning project, from data exploration to model deployment.
-        """)
-        st.markdown("#### Key Skills:")
-        st.code("""
-- Python (Pandas, NumPy, Scikit-learn, TensorFlow)
-- Machine Learning (Regression, Classification, Clustering)
-- Data Visualization (Plotly, Matplotlib, Seaborn)
-- Web Frameworks (Streamlit, Flask)
-- Databases (SQL)
-        """)
-        st.markdown("#### Find me on:")
-        st.markdown("[LinkedIn](https://www.linkedin.com/) | [GitHub](https://github.com/) | [HuggingFace](https://huggingface.co/)")
+churn_drivers = st.sidebar.multiselect(
+    'Filter by Churn Driver',
+    options=df['TopChurnDriver'].unique(),
+    default=df['TopChurnDriver'].unique(),
+    help="Select the primary reasons for churn you want to analyze."
+)
 
-    with col2:
-        st.image("https://placehold.co/500x500/4F46E5/FFFFFF?text=AMT",
-                 caption="Alok Mahadev Tungal", use_column_width=True)
+# --- FILTER DATA BASED ON CONTROLS ---
+filtered_df = df[
+    (df['ChurnRiskScore'] > risk_threshold) &
+    (df['TopChurnDriver'].isin(churn_drivers))
+]
 
-# --- PAGE 2: THE PROJECT ---
-elif page == "The Project":
-    st.title("📊 The Project: Used Car Price Prediction")
-    st.markdown("---")
-    st.markdown("### Project Goal")
-    st.info("The primary objective of this project is to develop a robust machine learning model that can accurately predict the price of used cars based on their features like brand, model, age, mileage, and fuel type.")
+# --- MAIN APP LAYOUT ---
+st.title("🧑‍💼 Customer Churn Interactive Dashboard")
+st.markdown("An interactive tool to identify, analyze, and retain at-risk customers.")
+st.markdown("---")
 
-    st.markdown("### Methodology")
-    st.markdown("""
-    The project follows a standard data science pipeline, ensuring a structured and effective workflow from start to finish.
-    """)
-    with st.expander("Click to see the detailed project pipeline"):
-        st.write("""
-        1.  **📝 Data Collection:** The dataset was sourced from a public repository, containing over 9,000 listings of used cars across India.
-        2.  **🧹 Data Cleaning & Preprocessing:** Handled missing values, removed duplicates, and corrected data types to prepare the data for analysis.
-        3.  **📈 Exploratory Data Analysis (EDA):** Generated various visualizations to understand the relationships between different car features and their impact on price. Key insights were drawn from distributions, correlations, and categorical breakdowns.
-        4.  **🛠️ Feature Engineering:** Created new features like 'Car Age' from the 'Year' of manufacture to improve model performance. Categorical features were encoded using techniques like one-hot encoding.
-        5.  **🤖 Model Training & Selection:** Trained several regression models, including Linear Regression, Random Forest, and Gradient Boosting. **XGBoost Regressor** was selected as the final model due to its superior performance.
-        6.  **튜닝 Hyperparameter Tuning:** Used techniques like GridSearchCV to find the optimal set of hyperparameters for the XGBoost model, boosting its accuracy from 94% to **96% (R² Score)**.
-        7.  **🚀 Deployment:** The trained model was serialized using `joblib` and deployed as an interactive web application using **Streamlit**, hosted on **Hugging Face Spaces**.
-        """)
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Dataset Rows", "9,176")
-    col2.metric("Features Used", "7")
-    col3.metric("Best Model", "XGBoost (96% R²)")
+# --- TOP KPI ROW ---
+avg_risk_score = df['ChurnRiskScore'].mean()
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric(label="Total Customers", value=len(df))
+with col2:
+    st.metric(label=f"High-Risk Customers (>{risk_threshold}%)", value=len(filtered_df), delta_color="inverse")
+with col3:
+    st.metric(label="Average Risk Score", value=f"{avg_risk_score:.1f}%")
 
+st.markdown("---")
 
-# --- PAGE 3: DATA INSIGHTS / EDA ---
-elif page == "Data Insights":
-    st.title("📈 Exploratory Data Analysis (EDA)")
-    st.markdown("---")
+# --- TABS FOR DIFFERENT VIEWS ---
+tab1, tab2 = st.tabs(["📊 Risk Analysis Dashboard", "📋 Customer Deep Dive"])
 
-    @st.cache_data
-    def generate_mock_data(n=500):
-        """Generates a more detailed mock DataFrame for EDA."""
-        data = {
-            'Price': np.random.uniform(2.5, 45.0, n),
-            'Age': np.random.randint(1, 12, n),
-            'KM Driven': np.random.randint(10000, 150000, n),
-            'Brand': [random.choice(ALL_BRANDS) for _ in range(n)],
-            'Fuel Type': [random.choice(['Petrol', 'Diesel']) for _ in range(n)],
-            'Transmission': [random.choice(['Manual', 'Automatic']) for _ in range(n)],
-            'Ownership': [random.choice(['First Owner', 'Second Owner', 'Third Owner']) for _ in range(n)]
-        }
-        return pd.DataFrame(data)
-
-    df = generate_mock_data()
-
-    # Create two columns for a cleaner layout
-    col1, col2 = st.columns([1, 2])
+with tab1:
+    st.header("Overall Risk Analysis")
+    col1, col2 = st.columns([1, 1.5])
     
     with col1:
-        st.subheader("Select a Visualization")
-        plot_choice = st.radio(
-            "Choose a chart:",
-            [
-                "Correlation Heatmap",
-                "Price Distribution by Fuel Type",
-                "Price vs. Car Age",
-                "Price by Ownership Type"
-            ]
+        st.subheader("Risk Score Distribution")
+        fig_gauge = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=avg_risk_score,
+            title={'text': "Average Risk Score"},
+            gauge={
+                'axis': {'range': [None, 100]},
+                'steps': [
+                    {'range': [0, 50], 'color': 'lightgreen'},
+                    {'range': [50, 75], 'color': 'orange'}],
+                'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': risk_threshold}
+            }))
+        fig_gauge.update_layout(height=250, margin=dict(l=10, r=10, t=50, b=10))
+        st.plotly_chart(fig_gauge, use_container_width=True)
+
+    with col2:
+        st.subheader("Usage vs. Support Tickets")
+        fig_scatter = px.scatter(
+            df, x='ProductUsageScore', y='SupportTickets',
+            color='ChurnRiskScore',
+            color_continuous_scale='Reds',
+            title="Low Usage & High Tickets Correlate with High Risk",
+            hover_name='CustomerID'
         )
+        st.plotly_chart(fig_scatter, use_container_width=True)
 
-    with col2:
-        if plot_choice == "Correlation Heatmap":
-            st.subheader("Numerical Feature Correlation")
-            corr = df[['Price', 'Age', 'KM Driven']].corr()
-            fig = px.imshow(corr, text_auto=True, aspect="auto",
-                            title="Heatmap of Price, Age, and Mileage", color_continuous_scale='RdBu_r')
-            st.plotly_chart(fig, use_container_width=True)
+with tab2:
+    st.header("High-Risk Customer List & Profile")
+    st.info(f"Showing **{len(filtered_df)} customers** with a risk score greater than **{risk_threshold}%**.")
+    
+    if not filtered_df.empty:
+        # --- CUSTOMER SELECTION FOR DEEP DIVE ---
+        selected_customer_id = st.selectbox(
+            "Select a Customer for a Detailed View",
+            options=filtered_df['CustomerID']
+        )
+        
+        selected_customer_details = filtered_df[filtered_df['CustomerID'] == selected_customer_id].iloc[0]
 
-        elif plot_choice == "Price Distribution by Fuel Type":
-            st.subheader("Price Distribution: Petrol vs. Diesel")
-            fig = px.box(df, x='Fuel Type', y='Price', color='Fuel Type',
-                         title="Median Price for Petrol vs. Diesel Cars",
-                         labels={"Price": "Price (in Lakhs)"})
-            st.plotly_chart(fig, use_container_width=True)
+        # --- DETAILED CUSTOMER PROFILE CARD ---
+        st.subheader(f"Profile: {selected_customer_id}")
+        card_cols = st.columns(4)
+        card_cols[0].metric("Churn Risk", f"{selected_customer_details['ChurnRiskScore']:.1f}%")
+        card_cols[1].metric("Monthly Contract", f"₹{selected_customer_details['MonthlyContractValue']:,}")
+        card_cols[2].metric("Tenure", f"{selected_customer_details['TenureMonths']} months")
+        card_cols[3].metric("Support Tickets", selected_customer_details['SupportTickets'])
+        st.warning(f"**Primary Churn Driver:** {selected_customer_details['TopChurnDriver']}")
 
-        elif plot_choice == "Price vs. Car Age":
-            st.subheader("Price Depreciation Over Time")
-            fig = px.scatter(df, x='Age', y='Price', color='Brand',
-                             title="Price vs. Age of Car",
-                             labels={"Price": "Price (in Lakhs)", "Age": "Age (Years)"})
-            st.plotly_chart(fig, use_container_width=True)
-
-        elif plot_choice == "Price by Ownership Type":
-            st.subheader("Impact of Ownership on Price")
-            fig = px.box(df, x='Ownership', y='Price', color='Ownership',
-                         title="Price Distribution by Number of Owners",
-                         labels={"Price": "Price (in Lakhs)"},
-                         category_orders={"Ownership": ["First Owner", "Second Owner", "Third Owner"]})
-            st.plotly_chart(fig, use_container_width=True)
-
-# --- PAGE 4: PRICE PREDICTOR ---
-elif page == "Price Predictor":
-    st.title("🔮 Price Predictor")
-    st.markdown("---")
-    st.markdown("Fill in the car's details below to get an estimated market price.")
-
-    col1, col2 = st.columns([1, 1.2])
-
-    with col1:
-        st.subheader("Enter Car Details")
-        brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
-        model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
-        fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
-        age = st.number_input("Car Age (years)", 1, 25, 5)
-        km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
-        transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
-        ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
-        predict_button = st.button("Predict Price", type="primary", use_container_width=True)
-
-    with col2:
-        st.subheader("Prediction Result")
-        if predict_button:
-            price = predict_car_price(brand, model, age, km_driven, fuel_type, transmission, ownership)
-            st.success(f"### Predicted Price: ₹ {price:.2f} Lakhs")
-            with st.expander("See Feature Impact on Price"):
-                fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
-                st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("Enter the car details and click 'Predict Price' to see the estimated value.")
-
-
+    else:
+        st.success("No customers match the current filter settings.")
 
 
 
