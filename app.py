@@ -445,7 +445,7 @@ cat_cols = X.select_dtypes(exclude=[np.number]).columns.tolist()
 preprocessor = ColumnTransformer(
     transformers=[
         ("num", "passthrough", num_cols),
-        ("cat", OneHotEncoder(handle_unknown="ignore", sparse=False), cat_cols)
+        ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_cols)
     ]
 )
 
