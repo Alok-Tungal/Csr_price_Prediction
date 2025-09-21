@@ -235,10 +235,11 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
-import random
-import os
+import numpy as np
 import joblib
+import os
+import random
+import plotly.graph_objects as go
 
 # --- APP CONFIGURATION ---
 st.set_page_config(
@@ -254,49 +255,49 @@ MODEL_FILE = "car_price_predictoR.joblib"
 if os.path.exists(MODEL_FILE):
     try:
         model_pipeline = joblib.load(MODEL_FILE)
-        st.sidebar.success(f"✅ Loaded pretrained model `{MODEL_FILE}`")
+        st.sidebar.success(f"Loaded pretrained model `{MODEL_FILE}`")
     except Exception as e:
         st.sidebar.error(f"❌ Error loading model: {e}")
         st.stop()
 else:
-    st.sidebar.error(f"❌ Pickle file `{MODEL_FILE}` not found!")
+    st.sidebar.error(f"Pickle file `{MODEL_FILE}` not found!")
     st.stop()
 
 # --- CAR DATA ---
 CAR_DATA = {
-  "Maruti": ["Swift", "Swift Dzire", "Alto 800", "Wagon R 1.0", "Ciaz", "Ertiga", "Vitara Brezza", "Baleno", "S Cross", "Celerio", "IGNIS"],
-  "Mahindra": ["XUV500", "Scorpio", "Thar", "XUV300", "Bolero", "Marazzo", "TUV300"],
-  "Volkswagen": ["Polo", "Vento", "Ameo", "Jetta", "Passat", "Tiguan"],
-  "Tata": ["Nexon", "Harrier", "Tiago", "Tigor", "Safari", "Hexa", "PUNCH"],
-  "Hyundai": ["i20", "Creta", "Verna", "VENUE", "Grand i10", "Santro", "Xcent", "Aura"],
-  "Honda": ["City", "Amaze", "Jazz", "WR-V", "BR-V", "Civic"],
-  "Ford": ["EcoSport", "Endeavour", "Figo", "Aspire", "Freestyle"],
-  "BMW": ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series"],
-  "Renault": ["Kwid", "Duster", "Triber", "Kiger", "Captur"],
-  "MG": ["Hector", "Hector Plus", "Gloster", "ZS EV"],
-  "Datsun": ["redi-GO", "GO", "GO+"],
-  "Nissan": ["Magnite", "Kicks", "Terrano", "Sunny", "Micra"],
-  "Toyota": ["Innova Crysta", "Fortuner", "Yaris", "Glanza", "Urban Cruiser", "Corolla Altis"],
-  "Skoda": ["Rapid", "Octavia", "Superb", "Kushaq", "Slavia"],
-  "Jeep": ["Compass", "Wrangler", "Meridian"],
-  "KIA": ["Seltos", "Sonet", "Carnival", "Carens"],
-  "Audi": ["A4", "A6", "Q3", "Q5", "Q7"],
-  "Landrover": ["Range Rover Evoque", "Discovery Sport", "Range Rover Velar"],
-  "Mercedes": ["C-Class", "E-Class", "GLC", "GLE", "S-Class"],
-  "Chevrolet": ["Beat", "Cruze", "Spark", "Sail", "Enjoy"],
-  "Fiat": ["Punto", "Linea"],
-  "Ssangyong": ["Rexton"],
-  "Jaguar": ["XF", "XE", "F-PACE"],
-  "Mitsubishi": ["Pajero Sport"],
-  "CITROEN": ["C5 Aircross", "C3"],
-  "Mini": ["Cooper"],
-  "ISUZU": ["D-MAX V-Cross"],
-  "Volvo": ["XC60", "XC90", "S90"],
-  "Porsche": ["Cayenne", "Macan"],
-  "Force": ["Gurkha"]
+    "Maruti": ["Swift", "Swift Dzire", "Alto 800", "Wagon R 1.0", "Ciaz", "Ertiga", "Vitara Brezza", "Baleno", "S Cross", "Celerio", "IGNIS"],
+    "Mahindra": ["XUV500", "Scorpio", "Thar", "XUV300", "Bolero", "Marazzo", "TUV300"],
+    "Volkswagen": ["Polo", "Vento", "Ameo", "Jetta", "Passat", "Tiguan"],
+    "Tata": ["Nexon", "Harrier", "Tiago", "Tigor", "Safari", "Hexa", "PUNCH"],
+    "Hyundai": ["i20", "Creta", "Verna", "VENUE", "Grand i10", "Santro", "Xcent", "Aura"],
+    "Honda": ["City", "Amaze", "Jazz", "WR-V", "BR-V", "Civic"],
+    "Ford": ["EcoSport", "Endeavour", "Figo", "Aspire", "Freestyle"],
+    "BMW": ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series"],
+    "Renault": ["Kwid", "Duster", "Triber", "Kiger", "Captur"],
+    "MG": ["Hector", "Hector Plus", "Gloster", "ZS EV"],
+    "Datsun": ["redi-GO", "GO", "GO+"],
+    "Nissan": ["Magnite", "Kicks", "Terrano", "Sunny", "Micra"],
+    "Toyota": ["Innova Crysta", "Fortuner", "Yaris", "Glanza", "Urban Cruiser", "Corolla Altis"],
+    "Skoda": ["Rapid", "Octavia", "Superb", "Kushaq", "Slavia"],
+    "Jeep": ["Compass", "Wrangler", "Meridian"],
+    "KIA": ["Seltos", "Sonet", "Carnival", "Carens"],
+    "Audi": ["A4", "A6", "Q3", "Q5", "Q7"],
+    "Landrover": ["Range Rover Evoque", "Discovery Sport", "Range Rover Velar"],
+    "Mercedes": ["C-Class", "E-Class", "GLC", "GLE", "S-Class"],
+    "Chevrolet": ["Beat", "Cruze", "Spark", "Sail", "Enjoy"],
+    "Fiat": ["Punto", "Linea"],
+    "Ssangyong": ["Rexton"],
+    "Jaguar": ["XF", "XE", "F-PACE"],
+    "Mitsubishi": ["Pajero Sport"],
+    "CITROEN": ["C5 Aircross", "C3"],
+    "Mini": ["Cooper"],
+    "ISUZU": ["D-MAX V-Cross"],
+    "Volvo": ["XC60", "XC90", "S90"],
+    "Porsche": ["Cayenne", "Macan"],
+    "Force": ["Gurkha"]
 }
 
-# --- SHAP-LIKE PLOT ---
+# --- SHAP-LIKE FEATURE IMPACT PLOT ---
 def create_shap_plot(inputs, final_price):
     base_value = 8.0
     age_contribution = -(inputs['age'] * 0.5)
@@ -306,7 +307,6 @@ def create_shap_plot(inputs, final_price):
     
     contributions = [age_contribution, km_contribution, fuel_contribution, transmission_contribution]
     features = [f"Age = {inputs['age']} yrs", f"KM Driven = {(inputs['km']/1000):.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
-    
     colors = ['#E74C3C' if c < 0 else '#2ECC71' for c in contributions]
 
     fig = go.Figure(go.Bar(
@@ -329,58 +329,35 @@ def create_shap_plot(inputs, final_price):
 # --- STREAMLIT UI ---
 st.title("🏎️ Car Price Prediction & Analysis")
 
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["About Me", "The Project", "Data Insights", "Price Predictor"])
+col1, col2 = st.columns([1, 1])
+with col1:
+    st.subheader("Enter Car Details")
+    brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
+    model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand]))
+    age = st.number_input("Car Age (years)", 0, 25, 5)
+    km_driven = st.number_input("KM Driven", 0, 500000, 50000, step=1000)
+    fuel_type = st.selectbox("Fuel Type", options=['Petrol', 'Diesel', 'CNG', 'Electric', 'LPG'])
+    transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
+    ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
+    predict_button = st.button("Predict Price")
 
-# --- PRICE PREDICTOR PAGE ---
-if page == "Price Predictor":
-    st.header("Price Predictor")
+with col2:
+    st.subheader("Prediction Result")
+    if predict_button:
+        inputs = {'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}
+        try:
+            # Use your trained model
+            new_data = pd.DataFrame([inputs])
+            predicted_price = model_pipeline.predict(new_data)[0]
+            st.success(f"### Predicted Price: ₹ {predicted_price:.2f} Lakhs")
+            
+            shap_fig = create_shap_plot(inputs, predicted_price)
+            st.plotly_chart(shap_fig, use_container_width=True)
+        except Exception as e:
+            st.error(f"Prediction failed: {e}")
+    else:
+        st.info("Click 'Predict Price' after entering the details to see the result.")
 
-    col1, col2 = st.columns([1, 1])
-
-    with col1:
-        st.subheader("Enter Car Details")
-        
-        brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
-        models = CAR_DATA[brand]
-        model = st.selectbox("Car Model", options=sorted(models))
-        
-        age = st.number_input("Car Age (in years)", min_value=0, max_value=25, value=5)
-        km_driven = st.number_input("KM Driven", min_value=0, max_value=500000, value=50000, step=1000)
-        fuel_type = st.selectbox("Fuel Type", options=['Petrol', 'Diesel', 'CNG', 'Electric', 'LPG'])
-        transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
-        ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
-        
-        predict_button = st.button("Predict Price", use_container_width=True)
-
-    with col2:
-        st.subheader("Prediction Result")
-        if predict_button:
-            with st.spinner("Calculating..."):
-                # --- Prepare input dataframe for model ---
-                input_df = pd.DataFrame([{
-                    "age": age,
-                    "km": km_driven,
-                    "fuel": fuel_type,
-                    "transmission": transmission,
-                    "ownership": ownership,
-                    "brand": brand,
-                    "model": model
-                }])
-                try:
-                    predicted_price = model_pipeline.predict(input_df)[0]
-                    st.success(f"## Predicted Price: ₹ {predicted_price:.2f} Lakhs")
-                    shap_fig = create_shap_plot({
-                        'age': age,
-                        'km': km_driven,
-                        'fuel': fuel_type,
-                        'transmission': transmission
-                    }, predicted_price)
-                    st.plotly_chart(shap_fig, use_container_width=True)
-                except Exception as e:
-                    st.error(f"Error predicting price: {e}")
-        else:
-            st.info("Enter details and click 'Predict Price'.")
 
 
 
