@@ -1072,7 +1072,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- LOAD MODEL (OPTIONAL, COMMENT OUT IF NOT AVAILABLE) ---
+# --- LOAD MODEL (OPTIONAL) ---
 MODEL_FILE = "car_price_predictoR.joblib"
 @st.cache_resource
 def load_model(model_path):
@@ -1156,7 +1156,7 @@ def predict_car_price(age, km_driven, fuel, transmission, ownership):
     if ownership == 'Third Owner': base_price -= 2
     return max(1.5, base_price + (random.random() - 0.5))
 
-# --- SHAP-LIKE FEATURE IMPACT PLOT ---
+# --- SHAP-LIKE PLOT ---
 def create_shap_plot(inputs, final_price):
     base_value = 8.0
     contributions = [
@@ -1183,28 +1183,71 @@ def create_shap_plot(inputs, final_price):
     fig.update_layout(yaxis=dict(autorange="reversed"))
     return fig
 
-# --- STREAMLIT UI ---
-st.title("🔮 Car Price Predictor & Analysis")
-col1, col2 = st.columns([1, 1.2])
+# --- SIDEBAR NAVIGATION ---
+st.sidebar.title("📌 Navigation")
+page = st.sidebar.radio("Go to", ["About Me", "The Project", "Data Insights", "Price Predictor"])
 
-with col1:
-    st.subheader("Enter Car Details")
-    brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
-    model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
-    fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
-    age = st.number_input("Car Age (years)", 1, 25, 5)
-    km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
-    transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
-    ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
-    predict_button = st.button("Predict Price", type="primary", use_container_width=True)
+# --- PAGE 1: ABOUT ME ---
+if page == "About Me":
+    st.title("👋 About Me")
+    st.markdown("""
+    Hi, I’m **Alok Mahadev Tungal** — a passionate **Data Scientist** and **Machine Learning Enthusiast**.  
+    This app showcases my journey from **data analysis ➝ ML ➝ deployment**.  
+    """)
+    st.markdown("- [LinkedIn](https://www.linkedin.com/)\n- [GitHub](https://github.com/)\n- [HuggingFace](https://huggingface.co/)")
+    st.image("https://placehold.co/300x200/4F46E5/FFFFFF?text=AMT")
 
-with col2:
-    st.subheader("Prediction Result")
-    if predict_button:
-        price = predict_car_price(age, km_driven, fuel_type, transmission, ownership)
-        st.success(f"### Predicted Price: ₹ {price:.2f} Lakhs")
-        fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
-        st.plotly_chart(fig, use_container_width=True)
+# --- PAGE 2: THE PROJECT ---
+elif page == "The Project":
+    st.title("📊 The Project")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Dataset Rows", "9,176")
+    col2.metric("Brands Covered", "30+")
+    col3.metric("Best Model", "XGBoost (96% R²)")
+
+# --- PAGE 3: DATA INSIGHTS / EDA ---
+elif page == "Data Insights":
+    st.title("📈 Data Insights / EDA")
+    @st.cache_data
+    def generate_mock_data(n=500):
+        return pd.DataFrame({
+            'Price': [random.uniform(2, 48) for _ in range(n)],
+            'Age': [random.randint(1, 12) for _ in range(n)],
+            'Brand': [random.choice(list(CAR_DATA.keys())) for _ in range(n)]
+        })
+    df = generate_mock_data()
+    choice = st.selectbox("Select Visualization", ["Price Distribution", "Car Listings by Brand", "Price vs Age"])
+    if choice == "Price Distribution":
+        fig = px.histogram(df, x='Price', title="Distribution of Prices")
+    elif choice == "Car Listings by Brand":
+        counts = df['Brand'].value_counts().nlargest(10)
+        fig = px.bar(x=counts.values, y=counts.index, orientation='h', title="Top Brands")
     else:
-        st.info("Enter details and click predict.")
+        fig = px.scatter(df, x='Age', y='Price', color='Brand', title="Price vs Age")
+    st.plotly_chart(fig, use_container_width=True)
 
+# --- PAGE 4: PRICE PREDICTOR ---
+elif page == "Price Predictor":
+    st.title("🔮 Price Predictor")
+    col1, col2 = st.columns([1, 1.2])
+
+    with col1:
+        st.subheader("Enter Car Details")
+        brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
+        model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
+        fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
+        age = st.number_input("Car Age (years)", 1, 25, 5)
+        km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
+        transmission = st.selectbox("Transmission Type", options=['Manual', 'Automatic'])
+        ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
+        predict_button = st.button("Predict Price", type="primary", use_container_width=True)
+
+    with col2:
+        st.subheader("Prediction Result")
+        if predict_button:
+            price = predict_car_price(age, km_driven, fuel_type, transmission, ownership)
+            st.success(f"### Predicted Price: ₹ {price:.2f} Lakhs")
+            fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Enter details and click predict.")
