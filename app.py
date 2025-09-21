@@ -1062,6 +1062,8 @@ import streamlit as st
 import pandas as pd
 import random
 import plotly.express as px
+import joblib
+import os
 
 # --- APP CONFIGURATION ---
 st.set_page_config(
@@ -1069,6 +1071,16 @@ st.set_page_config(
     page_icon="🏎️",
     layout="wide"
 )
+
+# --- LOAD MODEL (OPTIONAL, COMMENT OUT IF NOT AVAILABLE) ---
+MODEL_FILE = "car_price_predictoR.joblib"
+@st.cache_resource
+def load_model(model_path):
+    if os.path.exists(model_path):
+        return joblib.load(model_path)
+    return None
+
+model_pipeline = load_model(MODEL_FILE)
 
 # --- CAR DATA WITH FUEL OPTIONS (ALL 30+ BRANDS) ---
 CAR_DATA = {
@@ -1123,6 +1135,18 @@ CAR_DATA = {
 
 # --- MOCK PREDICTION LOGIC ---
 def predict_car_price(age, km_driven, fuel, transmission, ownership):
+    if model_pipeline:
+        input_data = pd.DataFrame({
+            'Car_Brand': [brand],
+            'Car_Model': [model],
+            'Car_Age': [age],
+            'KM Driven': [km_driven],
+            'Fuel Type': [fuel],
+            'Transmission Type': [transmission],
+            'Ownership': [ownership]
+        })
+        return model_pipeline.predict(input_data)[0]
+    
     base_price = 8.0
     base_price -= age * 0.5
     base_price -= km_driven / 50000
@@ -1159,8 +1183,8 @@ def create_shap_plot(inputs, final_price):
     fig.update_layout(yaxis=dict(autorange="reversed"))
     return fig
 
-# --- STREAMLIT PRICE PREDICTOR ---
-st.title("🔮 Price Predictor")
+# --- STREAMLIT UI ---
+st.title("🔮 Car Price Predictor & Analysis")
 col1, col2 = st.columns([1, 1.2])
 
 with col1:
@@ -1183,3 +1207,4 @@ with col2:
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("Enter details and click predict.")
+
