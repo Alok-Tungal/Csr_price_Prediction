@@ -249,10 +249,6 @@ st.set_page_config(
 
 # --- PATH TO JOBLIB MODEL ---
 MODEL_FILE = "car_price_predictoR.joblib"
-
-# --- LOAD MODEL ---
-MODEL_FILE = "car_price_predictoR.joblib"
-
 if os.path.exists(MODEL_FILE):
     model_pipeline = joblib.load(MODEL_FILE)
     st.sidebar.success(f"Loaded pretrained model `{MODEL_FILE}`")
