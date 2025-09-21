@@ -1,14 +1,3 @@
 streamlit
-joblib
-numpy
-shap
-matplotlib
-scikit-learn
-streamlit-option-menu
-seaborn
-qrcode[pil]
-Pillow
-gspread
-google-auth
-openpyxl
+pandas
 plotly
