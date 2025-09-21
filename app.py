@@ -1823,8 +1823,10 @@ ALL_BRANDS = list(CAR_DATA.keys())
 
 @st.cache_data
 def generate_mock_data(num_cars=1500):
+    # CORRECTED THIS FUNCTION
     data = {
-        'Brand': np.random.choice(ALL_BRANDS, num_cars, p=[0.20, 0.15, 0.10, 0.10, 0.08, 0.05, 0.05, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03]),
+        # The 'p' parameter has been removed to fix the ValueError
+        'Brand': np.random.choice(ALL_BRANDS, num_cars),
         'Age': np.random.randint(1, 15, num_cars),
         'KM_Driven': np.random.randint(5000, 200000, num_cars),
         'Fuel_Type': np.random.choice(['Petrol', 'Diesel'], num_cars, p=[0.65, 0.35]),
@@ -1859,12 +1861,10 @@ with tab1:
     with col1:
         st.subheader("Filters")
         
-        # Dynamic filters based on the mock data
         brand_choice = st.multiselect("Brands", options=sorted(ALL_BRANDS), default=sorted(ALL_BRANDS)[:5])
         fuel_choice = st.multiselect("Fuel Types", options=df['Fuel_Type'].unique(), default=df['Fuel_Type'].unique())
         age_range = st.slider("Car Age", 1, 15, (1, 10))
 
-        # Filtered DataFrame
         df_filtered = df[
             (df['Brand'].isin(brand_choice)) &
             (df['Fuel_Type'].isin(fuel_choice)) &
@@ -1922,7 +1922,6 @@ with tab2:
             st.markdown("---")
             st.subheader("How your car compares to the market:")
             
-            # Competitor analysis scatter plot
             competitor_df = df[df['Brand'] == pred_brand]
             fig_comp = px.scatter(
                 competitor_df, x='KM_Driven', y='Price', 
@@ -1971,4 +1970,3 @@ with tab4:
         - [GitHub](https://github.com/)
         - [HuggingFace](https://huggingface.co/)
         """)
-
