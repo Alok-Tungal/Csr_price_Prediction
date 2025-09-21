@@ -1510,143 +1510,145 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
 import plotly.express as px
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Interactive Churn Dashboard",
-    page_icon="🧭",
+    page_title="Interactive Car Price Analyzer",
+    page_icon="🚗",
     layout="wide"
 )
 
 # --- DATA GENERATION ---
 @st.cache_data
-def generate_mock_data(num_customers=200):
+def generate_mock_data(num_cars=500):
+    """Generates a realistic mock dataset for the car market."""
+    brands = ["Maruti", "Hyundai", "Honda", "Tata", "Mahindra", "Ford", "Toyota", "BMW"]
     data = {
-        'CustomerID': [f'CUST-{1000+i}' for i in range(num_customers)],
-        'MonthlyContractValue': np.random.randint(500, 5000, num_customers),
-        'TenureMonths': np.random.randint(1, 72, num_customers),
-        'SupportTickets': np.random.randint(0, 15, num_customers),
-        'ProductUsageScore': np.random.randint(1, 100, num_customers),
+        'Brand': np.random.choice(brands, num_cars),
+        'Age': np.random.randint(1, 12, num_cars),
+        'KM_Driven': np.random.randint(5000, 150000, num_cars),
+        'Fuel_Type': np.random.choice(['Petrol', 'Diesel'], num_cars),
+        'Transmission': np.random.choice(['Manual', 'Automatic'], num_cars),
+        'Ownership': np.random.choice(['First Owner', 'Second Owner', 'Third Owner'], num_cars)
     }
     df = pd.DataFrame(data)
-    
-    risk_score = ( (50 / (df['TenureMonths'] + 1)) + (df['SupportTickets'] * 5) - (df['ProductUsageScore'] * 0.5) )
-    df['ChurnRiskScore'] = np.clip((risk_score / risk_score.max()) * 100, 5, 98)
 
-    conditions = [
-        (df['SupportTickets'] > 10),
-        (df['ProductUsageScore'] < 20),
-        (df['TenureMonths'] < 6)
-    ]
-    choices = ['High Support Tickets', 'Low Product Usage', 'New Customer Risk']
-    df['TopChurnDriver'] = np.select(conditions, choices, default='Multiple Factors')
+    # Create a mock price with logical dependencies
+    base_price = 20.0 - (df['Age'] * 1.5) - (df['KM_Driven'] / 20000)
+    base_price += df['Fuel_Type'].apply(lambda x: 1.5 if x == 'Diesel' else 0)
+    base_price += df['Transmission'].apply(lambda x: 2.0 if x == 'Automatic' else 0)
+    df['Price'] = np.clip(base_price + np.random.normal(0, 1.5, num_cars), 1.5, 50.0) # Add noise
     
     return df
 
 df = generate_mock_data()
 
 # --- SIDEBAR FOR CONTROLS ---
-st.sidebar.title("🧭 Dashboard Controls")
-st.sidebar.markdown("Use the controls below to filter the dashboard view.")
+st.sidebar.title("🔎 Market Filters")
+st.sidebar.markdown("Use the filters below to explore the car market data.")
 
-risk_threshold = st.sidebar.slider(
-    'Set Churn Risk Threshold',
-    min_value=0, max_value=100, value=75,
-    help="Customers with a risk score above this value will be flagged as 'High Risk'."
+price_range = st.sidebar.slider(
+    'Filter by Price Range (Lakhs)',
+    min_value=float(df['Price'].min()),
+    max_value=float(df['Price'].max()),
+    value=(float(df['Price'].min()), float(df['Price'].max()))
 )
 
-churn_drivers = st.sidebar.multiselect(
-    'Filter by Churn Driver',
-    options=df['TopChurnDriver'].unique(),
-    default=df['TopChurnDriver'].unique(),
-    help="Select the primary reasons for churn you want to analyze."
+brand_selection = st.sidebar.multiselect(
+    'Filter by Brand',
+    options=sorted(df['Brand'].unique()),
+    default=sorted(df['Brand'].unique())[:3] # Default to first 3 brands
+)
+
+fuel_selection = st.sidebar.multiselect(
+    'Filter by Fuel Type',
+    options=df['Fuel_Type'].unique(),
+    default=df['Fuel_Type'].unique()
 )
 
 # --- FILTER DATA BASED ON CONTROLS ---
 filtered_df = df[
-    (df['ChurnRiskScore'] > risk_threshold) &
-    (df['TopChurnDriver'].isin(churn_drivers))
+    (df['Price'].between(price_range[0], price_range[1])) &
+    (df['Brand'].isin(brand_selection)) &
+    (df['Fuel_Type'].isin(fuel_selection))
 ]
 
 # --- MAIN APP LAYOUT ---
-st.title("🧑‍💼 Customer Churn Interactive Dashboard")
-st.markdown("An interactive tool to identify, analyze, and retain at-risk customers.")
+st.title("🚗 Interactive Car Price Analyzer")
+st.markdown("An interactive dashboard to explore market trends and predict used car prices.")
 st.markdown("---")
 
 # --- TOP KPI ROW ---
-avg_risk_score = df['ChurnRiskScore'].mean()
+avg_price_total = df['Price'].mean()
+avg_price_filtered = filtered_df['Price'].mean() if not filtered_df.empty else 0
+
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric(label="Total Customers", value=len(df))
+    st.metric(label="Total Cars Listed", value=len(df))
 with col2:
-    st.metric(label=f"High-Risk Customers (>{risk_threshold}%)", value=len(filtered_df), delta_color="inverse")
+    st.metric(label="Cars Matching Filters", value=len(filtered_df))
 with col3:
-    st.metric(label="Average Risk Score", value=f"{avg_risk_score:.1f}%")
+    st.metric(
+        label="Average Price (Filtered)",
+        value=f"₹{avg_price_filtered:.2f} L",
+        delta=f"₹{avg_price_filtered - avg_price_total:.2f} L vs. market avg",
+    )
 
 st.markdown("---")
 
 # --- TABS FOR DIFFERENT VIEWS ---
-tab1, tab2 = st.tabs(["📊 Risk Analysis Dashboard", "📋 Customer Deep Dive"])
+tab1, tab2 = st.tabs(["📊 Market Analysis", "🔮 Price Predictor"])
 
 with tab1:
-    st.header("Overall Risk Analysis")
-    col1, col2 = st.columns([1, 1.5])
-    
-    with col1:
-        st.subheader("Risk Score Distribution")
-        fig_gauge = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=avg_risk_score,
-            title={'text': "Average Risk Score"},
-            gauge={
-                'axis': {'range': [None, 100]},
-                'steps': [
-                    {'range': [0, 50], 'color': 'lightgreen'},
-                    {'range': [50, 75], 'color': 'orange'}],
-                'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': risk_threshold}
-            }))
-        fig_gauge.update_layout(height=250, margin=dict(l=10, r=10, t=50, b=10))
-        st.plotly_chart(fig_gauge, use_container_width=True)
-
-    with col2:
-        st.subheader("Usage vs. Support Tickets")
-        fig_scatter = px.scatter(
-            df, x='ProductUsageScore', y='SupportTickets',
-            color='ChurnRiskScore',
-            color_continuous_scale='Reds',
-            title="Low Usage & High Tickets Correlate with High Risk",
-            hover_name='CustomerID'
-        )
-        st.plotly_chart(fig_scatter, use_container_width=True)
+    st.header("Explore Market Trends")
+    if not filtered_df.empty:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Price Depreciation by Age")
+            fig_scatter = px.scatter(
+                filtered_df, x='Age', y='Price',
+                color='Brand',
+                title="Price vs. Age for Selected Brands",
+                labels={"Price": "Price (Lakhs)", "Age": "Age (Years)"}
+            )
+            st.plotly_chart(fig_scatter, use_container_width=True)
+        with col2:
+            st.subheader("Price by Transmission & Fuel Type")
+            fig_box = px.box(
+                filtered_df, x='Transmission', y='Price',
+                color='Fuel_Type',
+                title="Price Distribution by Drivetrain",
+                labels={"Price": "Price (Lakhs)"}
+            )
+            st.plotly_chart(fig_box, use_container_width=True)
+    else:
+        st.warning("No cars match the current filter settings. Please adjust the filters in the sidebar.")
 
 with tab2:
-    st.header("High-Risk Customer List & Profile")
-    st.info(f"Showing **{len(filtered_df)} customers** with a risk score greater than **{risk_threshold}%**.")
-    
-    if not filtered_df.empty:
-        # --- CUSTOMER SELECTION FOR DEEP DIVE ---
-        selected_customer_id = st.selectbox(
-            "Select a Customer for a Detailed View",
-            options=filtered_df['CustomerID']
-        )
-        
-        selected_customer_details = filtered_df[filtered_df['CustomerID'] == selected_customer_id].iloc[0]
+    st.header("Get a Price Estimate")
+    st.info("Enter the details of a car to get a quick price prediction.")
 
-        # --- DETAILED CUSTOMER PROFILE CARD ---
-        st.subheader(f"Profile: {selected_customer_id}")
-        card_cols = st.columns(4)
-        card_cols[0].metric("Churn Risk", f"{selected_customer_details['ChurnRiskScore']:.1f}%")
-        card_cols[1].metric("Monthly Contract", f"₹{selected_customer_details['MonthlyContractValue']:,}")
-        card_cols[2].metric("Tenure", f"{selected_customer_details['TenureMonths']} months")
-        card_cols[3].metric("Support Tickets", selected_customer_details['SupportTickets'])
-        st.warning(f"**Primary Churn Driver:** {selected_customer_details['TopChurnDriver']}")
+    col1, col2 = st.columns([1, 1.5])
+    with col1:
+        st.subheader("Car Details")
+        pred_brand = st.selectbox("Brand", options=sorted(df['Brand'].unique()))
+        pred_age = st.number_input("Age (Years)", 1, 20, 5)
+        pred_km = st.number_input("Kilometers Driven", 1000, 300000, 50000, step=1000)
+        pred_fuel = st.selectbox("Fuel Type", options=df['Fuel_Type'].unique())
+        pred_trans = st.selectbox("Transmission", options=df['Transmission'].unique())
+        predict_button = st.button("Predict Price", type="primary")
 
-    else:
-        st.success("No customers match the current filter settings.")
+    with col2:
+        st.subheader("Prediction Result")
+        if predict_button:
+            # Simple mock prediction logic (replace with your actual model's logic if available)
+            predicted_price = 20.0 - (pred_age * 1.5) - (pred_km / 20000)
+            predicted_price += 1.5 if pred_fuel == 'Diesel' else 0
+            predicted_price += 2.0 if pred_trans == 'Automatic' else 0
+            final_price = max(1.5, predicted_price + np.random.normal(0, 0.5))
 
-
-
-
-
+            st.success(f"### Estimated Price: ₹ {final_price:.2f} Lakhs")
+            st.markdown("This is an estimate based on market data. Actual price may vary.")
+        else:
+            st.write("Click the 'Predict Price' button to see the result.")
