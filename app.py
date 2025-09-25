@@ -1971,7 +1971,7 @@ elif page == "Price Predictor":
         else:
             st.info("Enter car details and click **Predict Price**.")
 
- Mahadev Tungal • Car Price Prediction & Analysis • Use responsibly")
+ # Mahadev Tungal • Car Price Prediction & Analysis • Use responsibly")
 
 
 
