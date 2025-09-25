@@ -1778,13 +1778,207 @@
 
 
 
+# import streamlit as st
+# import pandas as pd
+# import random
+# import plotly.express as px
+# import joblib
+# import os
+# import numpy as np
+
+# # --- 1. APP CONFIGURATION ---
+# st.set_page_config(
+#     page_title="Car Price Prediction & Analysis",
+#     page_icon="🏎️",
+#     layout="wide",
+#     initial_sidebar_state="expanded"
+# )
+
+# # --- 2. LOAD MODEL ---
+# MODEL_FILE = "car_price_predictoR.joblib"
+
+# @st.cache_resource
+# def load_model(model_path):
+#     if os.path.exists(model_path):
+#         try:
+#             return joblib.load(model_path)
+#         except Exception as e:
+#             st.sidebar.error(f"⚠️ Error loading model: {e}")
+#             return None
+#     return None
+
+# model_pipeline = load_model(MODEL_FILE)
+
+# # --- SIDEBAR NAVIGATION ---
+# st.sidebar.image("https://placehold.co/200x80/000000/FFFFFF?text=🚗+Car+Price+AI", use_column_width=True)
+# page = st.sidebar.radio("📌 Navigation", ["About Me", "The Project", "Data Insights", "Price Predictor"])
+# st.sidebar.markdown("---")
+# if model_pipeline:
+#     st.sidebar.success("✅ Model loaded successfully")
+# else:
+#     st.sidebar.warning("⚠️ Using mock predictions (no trained model found)")
+
+# # --- 3. CAR DATA ---
+# CAR_DATA = {
+#     "Maruti": {"Swift": ["Petrol", "Diesel", "CNG"], "Swift Dzire": ["Petrol", "Diesel"], "Alto 800": ["Petrol"], "Wagon R 1.0": ["Petrol", "CNG"], "Ciaz": ["Petrol", "Diesel"], "Ertiga": ["Petrol", "Diesel"], "Vitara Brezza": ["Petrol", "Diesel"], "Baleno": ["Petrol", "Diesel"], "S Cross": ["Petrol", "Diesel"], "Celerio": ["Petrol", "CNG"], "IGNIS": ["Petrol", "Diesel", "CNG"]},
+#     "BMW": {"3 Series": ["Petrol", "Diesel"], "5 Series": ["Petrol", "Diesel"], "X1": ["Petrol", "Diesel"], "X3": ["Petrol", "Diesel"], "X5": ["Petrol", "Diesel", "Hybrid"], "7 Series": ["Petrol", "Diesel"]},
+#     # (... keep rest of brands same as your full dict ...)
+# }
+# ALL_BRANDS = list(CAR_DATA.keys())
+
+# # --- 4. FUNCTIONS ---
+# def predict_car_price(brand, model, age, km_driven, fuel, transmission, ownership):
+#     if model_pipeline:
+#         input_data = pd.DataFrame({
+#             'Car_Brand': [brand], 'Car_Model': [model], 'Car_Age': [age],
+#             'KM Driven': [km_driven], 'Fuel Type': [fuel],
+#             'Transmission Type': [transmission], 'Ownership': [ownership]
+#         })
+#         return model_pipeline.predict(input_data)[0]
+#     else:
+#         # Mock logic
+#         base_price = 8.0 - (age * 0.5) - (km_driven / 50000)
+#         if fuel == 'Diesel': base_price += 1.0
+#         if transmission == 'Automatic': base_price += 1.5
+#         if ownership == 'Second Owner': base_price -= 1.0
+#         elif ownership == 'Third Owner': base_price -= 2.0
+#         return max(1.5, base_price + (random.random() - 0.5))
+
+# def create_shap_plot(inputs, final_price):
+#     base_value = 8.0
+#     contributions = [
+#         -(inputs['age'] * 0.5),
+#         -(inputs['km'] / 50000),
+#         1.0 if inputs['fuel'] == 'Diesel' else -0.2,
+#         1.5 if inputs['transmission'] == 'Automatic' else -0.5
+#     ]
+#     features = [
+#         f"Age = {inputs['age']} yrs",
+#         f"KM Driven = {inputs['km']/1000:.1f}k km",
+#         f"Fuel = {inputs['fuel']}",
+#         f"Transmission = {inputs['transmission']}"
+#     ]
+#     df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
+#     df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
+#     fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
+#                  title=f"Feature Impact on Price<br>Base: ₹{base_value:.2f}L → Final: ₹{final_price:.2f}L",
+#                  text='Contribution', template="plotly_white")
+#     fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
+#     fig.update_layout(yaxis=dict(autorange="reversed"))
+#     return fig
+
+# # --- 5. PAGES ---
+
+# # ABOUT ME
+# if page == "About Me":
+#     st.title("👋 About Me")
+#     col1, col2 = st.columns([2, 1])
+#     with col1:
+#         st.markdown("""
+#         ### Alok Mahadev Tungal  
+#         **Data Scientist | ML Engineer | AI Enthusiast**  
+
+#         - Skilled in Python, ML, Data Science, SQL, Power BI, Streamlit  
+#         - Experienced in **Regression, Classification, EDA, Deployment**  
+#         - Passionate about building **AI-driven solutions**  
+
+#         📌 *This app is my end-to-end project demo: EDA + ML + Deployment*  
+#         """)
+#         st.markdown("🔗 [LinkedIn](https://www.linkedin.com/) | [GitHub](https://github.com/)")
+#     with col2:
+#         st.image("https://placehold.co/400x400/4F46E5/FFFFFF?text=Alok+Tungal", caption="Alok M. Tungal")
+
+# # PROJECT
+# elif page == "The Project":
+#     st.title("📊 The Project")
+#     st.markdown("### Used Car Price Prediction")
+#     st.info("Predicting used car prices using Machine Learning pipeline (XGBoost, R²=96%).")
+
+#     with st.expander("📌 See Full Project Pipeline"):
+#         st.markdown("""
+#         1. **Data Collection** → 9K+ used car listings  
+#         2. **Preprocessing** → Missing values, duplicates fixed  
+#         3. **EDA** → Brand, Fuel, Age, Ownership impact  
+#         4. **Feature Engineering** → Car Age, Encodings  
+#         5. **Model Training** → XGBoost (best performer)  
+#         6. **Hyperparameter Tuning** → GridSearchCV  
+#         7. **Deployment** → Streamlit app (this project)  
+#         """)
+
+#     col1, col2, col3 = st.columns(3)
+#     col1.metric("Dataset Size", "9,176 rows")
+#     col2.metric("Features", "7")
+#     col3.metric("Model", "XGBoost (96% R²)")
+
+# # EDA
+# elif page == "Data Insights":
+#     st.title("📈 Data Insights (EDA)")
+#     @st.cache_data
+#     def mock_data(n=1000):
+#         return pd.DataFrame({
+#             'Price': np.random.uniform(2.5, 60.0, n),
+#             'Age': np.random.randint(1, 15, n),
+#             'KM Driven': np.random.randint(10000, 180000, n),
+#             'Brand': [random.choice(ALL_BRANDS) for _ in range(n)],
+#             'Fuel Type': [random.choice(['Petrol', 'Diesel', 'CNG']) for _ in range(n)],
+#             'Transmission': [random.choice(['Manual', 'Automatic']) for _ in range(n)],
+#             'Ownership': [random.choice(['First Owner', 'Second Owner', 'Third Owner']) for _ in range(n)]
+#         })
+#     df = mock_data()
+
+#     tab1, tab2, tab3, tab4 = st.tabs(["📊 Market Share", "📉 Price vs Age", "⛽ Fuel Type", "👥 Ownership"])
+
+#     with tab1:
+#         top_brands = df['Brand'].value_counts().nlargest(10).index
+#         fig = px.pie(df[df['Brand'].isin(top_brands)], names='Brand', title="Market Share of Top Brands")
+#         st.plotly_chart(fig, use_container_width=True)
+
+#     with tab2:
+#         fig = px.scatter(df, x='Age', y='Price', color='Brand', title="Price vs Car Age")
+#         st.plotly_chart(fig, use_container_width=True)
+
+#     with tab3:
+#         fig = px.box(df, x='Fuel Type', y='Price', color='Fuel Type', title="Price by Fuel Type")
+#         st.plotly_chart(fig, use_container_width=True)
+
+#     with tab4:
+#         fig = px.box(df, x='Ownership', y='Price', color='Ownership',
+#                      title="Price by Ownership", category_orders={"Ownership": ["First Owner", "Second Owner", "Third Owner"]})
+#         st.plotly_chart(fig, use_container_width=True)
+
+# # PRICE PREDICTOR
+# elif page == "Price Predictor":
+#     st.title("🔮 Price Predictor")
+#     col1, col2 = st.columns([1, 1.2])
+
+#     with col1:
+#         brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
+#         model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
+#         fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
+#         age = st.number_input("Car Age (yrs)", 1, 25, 5)
+#         km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
+#         transmission = st.selectbox("Transmission", options=['Manual', 'Automatic'])
+#         ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth+'])
+#         predict_btn = st.button("🚀 Predict Price", type="primary", use_container_width=True)
+
+#     with col2:
+#         if predict_btn:
+#             price = predict_car_price(brand, model, age, km_driven, fuel_type, transmission, ownership)
+#             st.success(f"### 💰 Estimated Price: ₹ {price:.2f} Lakhs")
+#             with st.expander("📊 See Feature Impact"):
+#                 fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
+#                 st.plotly_chart(fig, use_container_width=True)
+#         else:
+#             st.info("Enter car details and click **Predict Price**.")
+
+
 import streamlit as st
 import pandas as pd
-import random
-import plotly.express as px
+import numpy as np
 import joblib
 import os
-import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
@@ -1794,14 +1988,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 2. LOAD MODEL ---
+# --- 2. MODEL & DATA LOADING ---
 MODEL_FILE = "car_price_predictoR.joblib"
 
 @st.cache_resource
-def load_model(model_path):
-    if os.path.exists(model_path):
+def load_model(path: str):
+    if os.path.exists(path):
         try:
-            return joblib.load(model_path)
+            return joblib.load(path)
         except Exception as e:
             st.sidebar.error(f"⚠️ Error loading model: {e}")
             return None
@@ -1809,168 +2003,233 @@ def load_model(model_path):
 
 model_pipeline = load_model(MODEL_FILE)
 
-# --- SIDEBAR NAVIGATION ---
-st.sidebar.image("https://placehold.co/200x80/000000/FFFFFF?text=🚗+Car+Price+AI", use_column_width=True)
-page = st.sidebar.radio("📌 Navigation", ["About Me", "The Project", "Data Insights", "Price Predictor"])
-st.sidebar.markdown("---")
-if model_pipeline:
-    st.sidebar.success("✅ Model loaded successfully")
-else:
-    st.sidebar.warning("⚠️ Using mock predictions (no trained model found)")
-
-# --- 3. CAR DATA ---
 CAR_DATA = {
-    "Maruti": {"Swift": ["Petrol", "Diesel", "CNG"], "Swift Dzire": ["Petrol", "Diesel"], "Alto 800": ["Petrol"], "Wagon R 1.0": ["Petrol", "CNG"], "Ciaz": ["Petrol", "Diesel"], "Ertiga": ["Petrol", "Diesel"], "Vitara Brezza": ["Petrol", "Diesel"], "Baleno": ["Petrol", "Diesel"], "S Cross": ["Petrol", "Diesel"], "Celerio": ["Petrol", "CNG"], "IGNIS": ["Petrol", "Diesel", "CNG"]},
+    "Maruti": {"Swift": ["Petrol", "CNG"], "Swift Dzire": ["Petrol", "Diesel"], "Alto 800": ["Petrol"], "Wagon R 1.0": ["Petrol", "CNG"], "Ciaz": ["Petrol", "Diesel"], "Ertiga": ["Petrol", "Diesel"], "Vitara Brezza": ["Petrol", "Diesel"], "Baleno": ["Petrol"], "S Cross": ["Diesel"], "Celerio": ["Petrol", "CNG"], "IGNIS": ["Petrol", "CNG"]},
+    "Mahindra": {"XUV500": ["Diesel"], "Scorpio": ["Diesel"], "Thar": ["Petrol", "Diesel"], "XUV300": ["Petrol", "Diesel"], "Bolero": ["Diesel"], "Marazzo": ["Diesel"], "TUV300": ["Diesel"]},
+    "Volkswagen": {"Polo": ["Petrol", "Diesel"], "Vento": ["Petrol", "Diesel"], "Ameo": ["Petrol", "Diesel"], "Jetta": ["Petrol", "Diesel"], "Passat": ["Petrol", "Diesel"], "Tiguan": ["Petrol", "Diesel"]},
+    "Tata": {"Nexon": ["Petrol", "Diesel", "Electric"], "Harrier": ["Diesel"], "Tiago": ["Petrol", "CNG"], "Tigor": ["Petrol", "CNG"], "Safari": ["Diesel"], "Hexa": ["Diesel"], "PUNCH": ["Petrol"]},
+    "Hyundai": {"i20": ["Petrol"], "Creta": ["Petrol", "Diesel"], "Verna": ["Petrol", "Diesel"], "VENUE": ["Petrol"], "Grand i10": ["Petrol", "CNG"], "Santro": ["Petrol", "CNG"], "Xcent": ["Petrol"], "Aura": ["Petrol"]},
+    "Honda": {"City": ["Petrol"], "Amaze": ["Petrol"], "Jazz": ["Petrol"], "WR-V": ["Petrol"], "BR-V": ["Petrol"], "Civic": ["Petrol"]},
+    "Ford": {"EcoSport": ["Petrol", "Diesel"], "Endeavour": ["Diesel"], "Figo": ["Petrol", "Diesel"], "Aspire": ["Petrol", "Diesel"], "Freestyle": ["Petrol"]},
     "BMW": {"3 Series": ["Petrol", "Diesel"], "5 Series": ["Petrol", "Diesel"], "X1": ["Petrol", "Diesel"], "X3": ["Petrol", "Diesel"], "X5": ["Petrol", "Diesel", "Hybrid"], "7 Series": ["Petrol", "Diesel"]},
-    # (... keep rest of brands same as your full dict ...)
+    "Renault": {"Kwid": ["Petrol"], "Duster": ["Petrol", "Diesel"], "Triber": ["Petrol"], "Kiger": ["Petrol"], "Captur": ["Petrol", "Diesel"]},
+    "MG": {"Hector": ["Petrol", "Diesel"], "Hector Plus": ["Petrol", "Diesel"], "Gloster": ["Diesel"], "ZS EV": ["Electric"]},
+    "Datsun": {"redi-GO": ["Petrol"], "GO": ["Petrol"], "GO+": ["Petrol"]},
+    "Nissan": {"Magnite": ["Petrol"], "Kicks": ["Petrol"], "Terrano": ["Diesel"], "Sunny": ["Petrol"], "Micra": ["Petrol"]},
+    "Toyota": {"Innova Crysta": ["Diesel"], "Fortuner": ["Diesel"], "Yaris": ["Petrol"], "Glanza": ["Petrol"], "Urban Cruiser": ["Petrol"], "Corolla Altis": ["Petrol", "Hybrid"]},
+    "Skoda": {"Rapid": ["Petrol"], "Octavia": ["Petrol"], "Superb": ["Petrol"], "Kushaq": ["Petrol"], "Slavia": ["Petrol"]},
+    "Jeep": {"Compass": ["Petrol", "Diesel"], "Wrangler": ["Petrol"], "Meridian": ["Diesel"]},
+    "KIA": {"Seltos": ["Petrol"], "Sonet": ["Petrol"], "Carnival": ["Diesel"], "Carens": ["Petrol"]},
+    "Audi": {"A4": ["Petrol"], "A6": ["Petrol"], "Q3": ["Petrol"], "Q5": ["Petrol"], "Q7": ["Petrol"]},
+    "Landrover": {"Range Rover Evoque": ["Petrol", "Diesel"], "Discovery Sport": ["Diesel"], "Range Rover Velar": ["Petrol"]},
+    "Mercedes": {"C-Class": ["Petrol"], "E-Class": ["Petrol"], "GLC": ["Petrol"], "GLE": ["Petrol"], "S-Class": ["Petrol"]},
+    "Chevrolet": {"Beat": ["Petrol"], "Cruze": ["Diesel"], "Spark": ["Petrol"], "Sail": ["Petrol"], "Enjoy": ["Diesel"]},
+    "Fiat": {"Punto": ["Petrol"], "Linea": ["Petrol"]},
+    "Jaguar": {"XF": ["Petrol", "Diesel"], "XE": ["Petrol"], "F-PACE": ["Petrol", "Diesel"]},
+    "Mitsubishi": {"Pajero Sport": ["Diesel"]},
+    "CITROEN": {"C5 Aircross": ["Petrol", "Diesel"], "C3": ["Petrol"]},
+    "Mini": {"Cooper": ["Petrol"]},
+    "ISUZU": {"D-MAX V-Cross": ["Diesel"]},
+    "Volvo": {"XC60": ["Petrol", "Hybrid"], "XC90": ["Petrol", "Hybrid"], "S90": ["Petrol"]},
+    "Porsche": {"Cayenne": ["Petrol"], "Macan": ["Petrol"]},
+    "Force": {"Gurkha": ["Diesel"]}
 }
-ALL_BRANDS = list(CAR_DATA.keys())
+ALL_BRANDS = sorted(list(CAR_DATA.keys()))
 
-# --- 4. FUNCTIONS ---
-def predict_car_price(brand, model, age, km_driven, fuel, transmission, ownership):
+# --- 3. HELPER FUNCTIONS ---
+@st.cache_data
+def generate_mock_dataset(n=2000):
+    """Generate a realistic-looking mock dataset for EDA and similarity comparisons."""
+    rows = []
+    for _ in range(n):
+        brand = np.random.choice(ALL_BRANDS)
+        model = np.random.choice(list(CAR_DATA[brand].keys()))
+        fuel = np.random.choice(CAR_DATA[brand][model])
+        age = np.random.randint(1, 15)
+        km_driven = max(1000, int(np.random.normal(60000, 40000)))
+        
+        price = max(0.5, 15 - (age * 0.8) - (km_driven / 20000) + np.random.normal(0, 2))
+        if brand in ["BMW", "Audi", "Mercedes", "Porsche", "Jaguar", "Landrover", "Volvo"]: price *= 2.5
+        
+        rows.append({ "brand": brand, "model": model, "fuel": fuel, "age": age,
+                      "km_driven": km_driven, "price_lakhs": round(price, 2)})
+    return pd.DataFrame(rows)
+
+def safe_predict(brand, model, age, km_driven, fuel, transmission, ownership):
+    """Return prediction either from pipeline or fallback logic."""
     if model_pipeline:
-        input_data = pd.DataFrame({
-            'Car_Brand': [brand], 'Car_Model': [model], 'Car_Age': [age],
-            'KM Driven': [km_driven], 'Fuel Type': [fuel],
-            'Transmission Type': [transmission], 'Ownership': [ownership]
-        })
-        return model_pipeline.predict(input_data)[0]
-    else:
-        # Mock logic
-        base_price = 8.0 - (age * 0.5) - (km_driven / 50000)
-        if fuel == 'Diesel': base_price += 1.0
-        if transmission == 'Automatic': base_price += 1.5
-        if ownership == 'Second Owner': base_price -= 1.0
-        elif ownership == 'Third Owner': base_price -= 2.0
-        return max(1.5, base_price + (random.random() - 0.5))
+        try:
+            X = pd.DataFrame([{"Car_Brand": brand, "Car_Model": model, "Car_Age": age, "KM Driven": km_driven, 
+                               "Fuel Type": fuel, "Transmission Type": transmission, "Ownership": ownership}])
+            return float(model_pipeline.predict(X)[0])
+        except Exception as e:
+            st.sidebar.error(f"Model prediction error: {e}")
+            # Fallthrough to mock
+    
+    base = 10.0 - (age * 0.7) - (km_driven / 50000)
+    if fuel == "Diesel": base += 1.2
+    if transmission == "Automatic": base += 1.5
+    if ownership == "Second Owner": base -= 1.0
+    elif "Third" in ownership or "Fourth" in ownership: base -= 2.0
+    if brand in ["BMW", "Audi", "Mercedes", "Porsche", "Jaguar", "Landrover", "Volvo"]: base += 8.0
+    elif brand in ["Toyota", "Skoda", "Jeep"]: base += 3.0
+    return round(max(0.5, base + np.random.normal(0, 1.0)), 2)
 
 def create_shap_plot(inputs, final_price):
-    base_value = 8.0
-    contributions = [
-        -(inputs['age'] * 0.5),
-        -(inputs['km'] / 50000),
-        1.0 if inputs['fuel'] == 'Diesel' else -0.2,
-        1.5 if inputs['transmission'] == 'Automatic' else -0.5
-    ]
-    features = [
-        f"Age = {inputs['age']} yrs",
-        f"KM Driven = {inputs['km']/1000:.1f}k km",
-        f"Fuel = {inputs['fuel']}",
-        f"Transmission = {inputs['transmission']}"
-    ]
+    """Creates a mock feature impact plot for visualization."""
+    base_value = 10.0
+    contributions = [-(inputs['age'] * 0.7), -(inputs['km'] / 50000), 1.2 if inputs['fuel'] == 'Diesel' else -0.3, 1.5 if inputs['transmission'] == 'Automatic' else -0.5]
+    features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
     df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
     df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
     fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
-                 title=f"Feature Impact on Price<br>Base: ₹{base_value:.2f}L → Final: ₹{final_price:.2f}L",
+                 title=f"<b>Feature Impact on Price</b><br>Base: ₹{base_value:.2f}L | Final: ₹{final_price:.2f}L",
                  text='Contribution', template="plotly_white")
     fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
-    fig.update_layout(yaxis=dict(autorange="reversed"))
+    fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
     return fig
 
-# --- 5. PAGES ---
+# --- 4. PAGE FUNCTIONS (to prevent overlap) ---
 
-# ABOUT ME
-if page == "About Me":
-    st.title("👋 About Me")
+def page_profile():
+    st.title("👋 Alok Mahadev Tungal")
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown("""
-        ### Alok Mahadev Tungal  
-        **Data Scientist | ML Engineer | AI Enthusiast**  
-
-        - Skilled in Python, ML, Data Science, SQL, Power BI, Streamlit  
-        - Experienced in **Regression, Classification, EDA, Deployment**  
-        - Passionate about building **AI-driven solutions**  
-
-        📌 *This app is my end-to-end project demo: EDA + ML + Deployment*  
-        """)
-        st.markdown("🔗 [LinkedIn](https://www.linkedin.com/) | [GitHub](https://github.com/)")
+        st.header("Data Scientist • Machine Learning Engineer")
+        st.write("Passionate about building data-driven applications and deploying ML at scale. Expertise in Python, ML pipelines, EDA, visualization and deployment.")
+        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, XGBoost, Plotly, Streamlit, SQL")
+        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/) • 💻 [GitHub](https://github.com/)")
+        st.markdown("---")
+        st.subheader("Highlights")
+        st.markdown("- Built end-to-end car price prediction pipeline (EDA → Model → Deployment)\n"
+                    "- Experience with XGBoost, hyperparameter tuning and model explainability\n"
+                    "- Strong visualization & dashboard skills using Plotly and Streamlit")
     with col2:
-        st.image("https://placehold.co/400x400/4F46E5/FFFFFF?text=Alok+Tungal", caption="Alok M. Tungal")
+        st.image("https://placehold.co/400x400/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
-# PROJECT
-elif page == "The Project":
-    st.title("📊 The Project")
-    st.markdown("### Used Car Price Prediction")
-    st.info("Predicting used car prices using Machine Learning pipeline (XGBoost, R²=96%).")
+def page_projects():
+    st.title("🚀 Projects")
+    st.markdown("A selection of projects I've built and deployed.")
+    with st.expander("Car Price Prediction (This App)", expanded=True):
+        st.write("End-to-end pipeline predicting used car prices — EDA, feature-engineering, XGBoost model, deploy.")
+        st.markdown("- Dataset: ~9k listings\n- Model: XGBoost (best) \n- Deployment: Streamlit / Hugging Face Spaces")
+    with st.expander("Churn Prediction"):
+        st.write("Customer churn prediction using RandomForest + feature importance analysis (SHAP).")
+    with st.expander("AQI Forecasting"):
+        st.write("Time-series forecasting using RandomForest / XGBoost and visual explanations.")
 
-    with st.expander("📌 See Full Project Pipeline"):
-        st.markdown("""
-        1. **Data Collection** → 9K+ used car listings  
-        2. **Preprocessing** → Missing values, duplicates fixed  
-        3. **EDA** → Brand, Fuel, Age, Ownership impact  
-        4. **Feature Engineering** → Car Age, Encodings  
-        5. **Model Training** → XGBoost (best performer)  
-        6. **Hyperparameter Tuning** → GridSearchCV  
-        7. **Deployment** → Streamlit app (this project)  
-        """)
+def page_eda():
+    st.title("📈 Exploratory Data Analysis")
+    st.markdown("This section provides insights from a generated sample dataset of car listings.")
+    
+    df = generate_mock_dataset()
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Dataset Size", "9,176 rows")
-    col2.metric("Features", "7")
-    col3.metric("Model", "XGBoost (96% R²)")
+    st.subheader("Data Preview")
+    st.dataframe(df.head(), use_container_width=True)
 
-# EDA
-elif page == "Data Insights":
-    st.title("📈 Data Insights (EDA)")
-    @st.cache_data
-    def mock_data(n=1000):
-        return pd.DataFrame({
-            'Price': np.random.uniform(2.5, 60.0, n),
-            'Age': np.random.randint(1, 15, n),
-            'KM Driven': np.random.randint(10000, 180000, n),
-            'Brand': [random.choice(ALL_BRANDS) for _ in range(n)],
-            'Fuel Type': [random.choice(['Petrol', 'Diesel', 'CNG']) for _ in range(n)],
-            'Transmission': [random.choice(['Manual', 'Automatic']) for _ in range(n)],
-            'Ownership': [random.choice(['First Owner', 'Second Owner', 'Third Owner']) for _ in range(n)]
-        })
-    df = mock_data()
+    st.subheader("Visualizations")
+    colA, colB = st.columns(2)
+    numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
+    cat_cols = df.select_dtypes(include="object").columns.tolist()
 
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Market Share", "📉 Price vs Age", "⛽ Fuel Type", "👥 Ownership"])
+    with colA:
+        if numeric_cols:
+            st.markdown("**Distribution Plot**")
+            sel_num = st.selectbox("Select a numeric column", numeric_cols, key="hist_num")
+            fig = px.histogram(df, x=sel_num, nbins=30, title=f"Distribution of {sel_num}", template="plotly_white")
+            st.plotly_chart(fig, use_container_width=True)
+    with colB:
+        if cat_cols:
+            st.markdown("**Category Count Plot**")
+            sel_cat = st.selectbox("Select a categorical column", cat_cols, key="bar_cat")
+            counts = df[sel_cat].value_counts().nlargest(15)
+            fig2 = px.bar(counts, x=counts.values, y=counts.index, orientation="h", title=f"Top categories in {sel_cat}", labels={"x": "Count", "y": sel_cat}, template="plotly_white")
+            st.plotly_chart(fig2, use_container_width=True)
+    
+    st.markdown("---")
+    st.subheader("Relationships between Features")
+    colC, colD = st.columns(2)
+    with colC:
+        if len(numeric_cols) >= 2:
+            st.markdown("**Correlation Heatmap**")
+            corr = df[numeric_cols].corr()
+            fig3 = px.imshow(corr, text_auto=True, title="Correlation Matrix", template="plotly_white")
+            st.plotly_chart(fig3, use_container_width=True)
+    with colD:
+        if len(numeric_cols) and len(cat_cols):
+            st.markdown("**Box Plot (Numeric vs. Categorical)**")
+            y_col = st.selectbox("Numeric (Y-axis)", numeric_cols, key="box_y")
+            x_col = st.selectbox("Category (X-axis)", cat_cols, key="box_x")
+            fig4 = px.box(df, x=x_col, y=y_col, title=f"{y_col} by {x_col}", template="plotly_white")
+            st.plotly_chart(fig4, use_container_width=True)
 
-    with tab1:
-        top_brands = df['Brand'].value_counts().nlargest(10).index
-        fig = px.pie(df[df['Brand'].isin(top_brands)], names='Brand', title="Market Share of Top Brands")
-        st.plotly_chart(fig, use_container_width=True)
+def page_prediction():
+    st.title("🔮 Car Price Prediction")
+    st.markdown("Enter the car details below to get a price estimate.")
+    
+    # Show the model status message ONLY on this page
+    if not model_pipeline:
+        st.info("ℹ️ No trained model found — using fallback prediction logic.")
 
-    with tab2:
-        fig = px.scatter(df, x='Age', y='Price', color='Brand', title="Price vs Car Age")
-        st.plotly_chart(fig, use_container_width=True)
+    left, right = st.columns([1, 1])
+    with left:
+        brand = st.selectbox("Brand", ALL_BRANDS)
+        model = st.selectbox("Model", sorted(CAR_DATA[brand].keys()))
+        fuel = st.selectbox("Fuel Type", CAR_DATA[brand][model])
+        transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
+        ownership = st.selectbox("Ownership", ["First Owner", "Second Owner", "Third Owner", "Fourth+ Owner"])
+    with right:
+        age = st.number_input("Car Age (years)", 0, 30, 4)
+        km_driven = st.number_input("KM Driven", 0, 500000, 45000, step=1000)
 
-    with tab3:
-        fig = px.box(df, x='Fuel Type', y='Price', color='Fuel Type', title="Price by Fuel Type")
-        st.plotly_chart(fig, use_container_width=True)
+    if st.button("🚀 Predict Price", use_container_width=True):
+        with st.spinner("Estimating price..."):
+            predicted_price = safe_predict(brand, model, age, km_driven, fuel, transmission, ownership)
 
-    with tab4:
-        fig = px.box(df, x='Ownership', y='Price', color='Ownership',
-                     title="Price by Ownership", category_orders={"Ownership": ["First Owner", "Second Owner", "Third Owner"]})
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("---")
+        st.header("Prediction Result")
+        col_l, col_r = st.columns(2)
+        with col_l:
+            st.metric("Estimated Price", f"₹ {predicted_price:.2f} Lakhs")
+            st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+        with col_r:
+            with st.expander("See Feature Impact", expanded=True):
+                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, predicted_price)
+                st.plotly_chart(fig_imp, use_container_width=True)
+        
+        st.subheader("Comparable Listings (from mock data)")
+        sample_df = generate_mock_dataset()
+        similar = sample_df[(sample_df["brand"] == brand)].copy()
+        similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
+        similar = similar.sort_values('similarity').head(10)
 
-# PRICE PREDICTOR
-elif page == "Price Predictor":
-    st.title("🔮 Price Predictor")
-    col1, col2 = st.columns([1, 1.2])
+        if not similar.empty:
+            sim_fig = px.scatter(similar, x="km_driven", y="price_lakhs", color="age",
+                                 size="price_lakhs", hover_data=["model", "fuel"],
+                                 title=f"Market Comparison for '{brand}'", template="plotly_white")
+            st.plotly_chart(sim_fig, use_container_width=True)
 
-    with col1:
-        brand = st.selectbox("Car Brand", options=sorted(CAR_DATA.keys()))
-        model = st.selectbox("Car Model", options=sorted(CAR_DATA[brand].keys()))
-        fuel_type = st.selectbox("Fuel Type", options=CAR_DATA[brand][model])
-        age = st.number_input("Car Age (yrs)", 1, 25, 5)
-        km_driven = st.number_input("KM Driven", 1000, 500000, 50000, step=1000)
-        transmission = st.selectbox("Transmission", options=['Manual', 'Automatic'])
-        ownership = st.selectbox("Ownership", options=['First Owner', 'Second Owner', 'Third Owner', 'Fourth+'])
-        predict_btn = st.button("🚀 Predict Price", type="primary", use_container_width=True)
+# --- 5. MAIN APP LOGIC ---
+st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car+Price+AI", use_container_width=True)
+st.sidebar.markdown("### Navigation")
+page_options = {
+    "Profile": page_profile,
+    "Projects": page_projects,
+    "EDA": page_eda,
+    "Prediction": page_prediction
+}
+selected_page_name = st.sidebar.radio("", list(page_options.keys()))
+st.sidebar.markdown("---")
+# This is now handled inside the prediction page function
+# if model_pipeline:
+#     st.sidebar.success("✅ Trained model loaded")
+# else:
+#     st.sidebar.info("ℹ️ No trained model found — using fallback predictions")
 
-    with col2:
-        if predict_btn:
-            price = predict_car_price(brand, model, age, km_driven, fuel_type, transmission, ownership)
-            st.success(f"### 💰 Estimated Price: ₹ {price:.2f} Lakhs")
-            with st.expander("📊 See Feature Impact"):
-                fig = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel_type, 'transmission': transmission}, price)
-                st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("Enter car details and click **Predict Price**.")
+# Run the selected page function
+page_options[selected_page_name]()
 
-
+st.markdown("---")
+st.caption("Built by Alok Mahadev Tungal • Car Price Prediction & Analysis • Use responsibly")
 
 
