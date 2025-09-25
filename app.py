@@ -4,7 +4,7 @@
 # import pandas as pd
 
 # # --- APP CONFIGURATION ---
-# st.set_page_config(
+# st.set_page_config( 
 #     page_title="Car Price Prediction & Analysis",
 #     page_icon="🏎️",
 #     layout="wide"
