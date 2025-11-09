@@ -2082,11 +2082,21 @@ def page_profile():
         # --- PROFILE IMAGE ---
         # Using a placeholder is fine, just swap the URL when you have a photo.
         # st.image("https://placehold.co/50x50/ea5a4e/ffffff?text=Alok", use_container_width=False)
+        # st.markdown(
+        #     """
+        #     <div style="text-align: center;">
+        #         <img src="https://placehold.co/100x100/ea5a4e/ffffff?text=Alok"
+        #              style="width:300px; height:300px; border-radius:50%; object-fit:cover; border:3px solid #ffffff;">
+        #     </div>
+        #     """,
+        #     unsafe_allow_html=True
+        # )
         st.markdown(
             """
             <div style="text-align: center;">
-                <img src="https://placehold.co/100x100/ea5a4e/ffffff?text=Alok"
-                     style="width:300px; height:300px; border-radius:50%; object-fit:cover; border:3px solid #ffffff;">
+                <img src="https://raw.githubusercontent.com/Alok-Tungal/profile/main/alok.jpg"
+                     style="width:300px; height:300px; border-radius:50%; object-fit:cover;
+                            border:5px solid #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.3);">
             </div>
             """,
             unsafe_allow_html=True
