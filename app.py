@@ -2532,11 +2532,7 @@ def page_prediction():
     with right:
         age = st.number_input("Car Age (years)", 0, 30, 4)
         km_driven = st.number_input("KM Driven", 0, 500000, 45000, step=1000)
-        
-        # --- NEW: Static image after KM Driven ---
-        st.image("https://placehold.co/700x350/555/FFF?text=Vehicle+Placeholder", 
-                 use_container_width=True, 
-                 caption="Enter your car's details")
+      
 
     if st.button("🚀 Predict Price", use_container_width=True):
         with st.spinner("Estimating price..."):
