@@ -1971,7 +1971,7 @@ def page_profile():
     st.markdown("""
         <div style="text-align: center;">
             <h1>👋 Hi, I'm Alok</h1>
-            <h3>Aspiring Data Scientist</h3>
+                <h3> Aspiring Data Scientist</h3>
         </div>
     """, unsafe_allow_html=True)
 
@@ -2014,13 +2014,6 @@ def page_profile():
         # --- PROFILE IMAGE ---
         # Using a placeholder is fine, just swap the URL when you have a photo.
         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
-
-# --- Run the app page ---
-# if __name__ == "__main__":
-#     st.set_page_config(page_title="Alok's Portfolio", layout="wide")
-#     page_profile()
-
-
 
 
 def page_projects():
