@@ -2143,7 +2143,7 @@ def page_profile():
           f"""
           <div style="text-align: center;">
               <img src="data:image/jpeg;base64,{image_base64}"
-                   style="width:300px; height:300px; border-radius:50%; 
+                   style="width:200px; height:250px; border-radius:50%; 
                           object-fit:cover; border:5px solid #ffffff; 
                           box-shadow:0 0 15px rgba(0,0,0,0.3);">
               <h3 style="color:white;">Alok</h3>
