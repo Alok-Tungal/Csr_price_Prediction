@@ -1896,14 +1896,21 @@ def safe_predict(brand, model, age, km_driven, fuel, transmission, ownership):
 #     fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
 #     return fig
 
-def create_shap_plot(inputs: dict, final_price: float):    
+def create_shap_plot(inputs: dict, final_price: float):
     """Generate a visual explanation of feature impact on predicted car price."""
+    
+    # Convert rupees → lakhs (if needed)
+    final_price_lakhs = final_price / 100000
+    formatted_final_price = f"{final_price_lakhs:,.2f} Lakhs"
+
+    # Calculate mock SHAP-like contributions
     contributions = [
         -(inputs['age'] * 0.7),
         -(inputs['km'] / 50000),
         1.2 if inputs['fuel'] == 'Diesel' else -0.3,
         1.5 if inputs['transmission'] == 'Automatic' else -0.5
     ]
+
     features = [
         f"Age = {inputs['age']} yrs",
         f"KM Driven = {inputs['km']/1000:.1f}k km",
@@ -1917,18 +1924,31 @@ def create_shap_plot(inputs: dict, final_price: float):
     })
     df['color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
 
+    # --- Plotly Visualization ---
     fig = px.bar(
-        df, x='Contribution', y='Feature', orientation='h',
-        title=f"<b>Feature Impact on Price</b><br>Final: {final_price:.2f} Lakhs",
-        text='Contribution', template="plotly_white"
+        df,
+        x='Contribution',
+        y='Feature',
+        orientation='h',
+        title=f"<b>Feature Impact on Price</b><br>Final: {formatted_final_price}",
+        text='Contribution',
+        template="plotly_white"
     )
-    fig.update_traces(marker_color=df['color'], texttemplate='%{text:.2f}', textposition='outside')
+
+    # --- Styling ---
+    fig.update_traces(
+        marker_color=df['color'],
+        texttemplate='%{text:.2f}',
+        textposition='outside'
+    )
     fig.update_layout(
         yaxis=dict(autorange="reversed"),
         xaxis_title="Contribution to Price (in Lakhs)",
         margin=dict(l=60, r=30, t=60, b=40)
     )
+
     return fig
+
 
 
 # --- 4. PAGE FUNCTIONS (to prevent overlap) ---
