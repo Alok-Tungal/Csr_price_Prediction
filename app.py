@@ -2231,10 +2231,35 @@ ALL_BRANDS = sorted(list(CAR_DATA.keys()))
 # --- Car Brand Images Mapping ---
 BRAND_IMAGES = {
     "Audi": "images/audi.jpg",
+    "Bentley": "images/bentley.jpg",
+    "BMW": "images/BMWW.jpg",
+    "Buick": "images/buick.jpg",
+    "Cadillac": "images/cadillac.jpg",
+    "Chevrolet": "images/chevrolet.jpg",
+    "Chrysler": "images/chrysler.jpg",
+    "Dodge": "images/dodge.jpg",
+    "Fiat": "images/fiat.jpg",
+    "Fisker": "images/fisker.jpg",
     "Ford": "images/ford.jpg",
+    "Freightliner": "images/freightliner.jpg",
+    "Genesis": "images/genesis.jpg",
+    "Geo": "images/geo.jpg",
+    "Honda": "images/honda.jpg",
+    "Hyundai": "images/hyundai.jpg",
     "Jaguar": "images/jaguar.jpg",
-    "BMW": "images/BMWW.jpg"
+    "Jeep": "images/jeep.jpg",
+    "Kia": "images/kia.jpg",
+    "Lamborghini": "images/lamborghini.jpg",
+    "Land Rover": "images/land.jpg",
+    "Lexus": "images/lexus.jpg",
+    "McLaren": "images/mclaren.jpg",
+    "Nissan": "images/nissan.jpg",
+    "Porsche": "images/porsche.jpg",
+    "Toyota": "images/toyota.jpg",
+    "Volkswagen": "images/volkswagen.jpg",
+    "Volvo": "images/volvo.jpg"
 }
+
 
 
 
