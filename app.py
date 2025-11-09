@@ -2136,14 +2136,14 @@ def page_profile():
               return base64.b64encode(img_file.read()).decode()
       
       # --- Convert your local image ---
-      image_base64 = get_base64_image("images/MY_PIC.jpg")
+      image_base64 = get_base64_image("images/linked_in_pic.jpg")
       
       # --- Display egg-shaped image ---
       st.markdown(
           f"""
           <div style="text-align: center;">
               <img src="data:image/jpeg;base64,{image_base64}"
-                   style="width:300px; height:300px; border-radius:50%; 
+                   style="width:300px; height:380px; border-radius:50%; 
                           object-fit:cover; border:5px solid #ffffff; 
                           box-shadow:0 0 15px rgba(0,0,0,0.3);">
               <h3 style="color:white;">Alok</h3>
