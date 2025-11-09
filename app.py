@@ -1971,7 +1971,7 @@ def page_profile():
     st.markdown("""
         <div style="text-align: center;">
             <h1>👋 Hi, I'm Alok</h1>
-            <h3> Aspiring Data Scientist </h3>
+                <h3>   Aspiring Data Scientist   </h3>
         </div>
     """, unsafe_allow_html=True)
 
