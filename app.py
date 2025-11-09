@@ -2174,9 +2174,6 @@ def page_prediction():
           with st.expander("See Feature Impact", expanded=True):
               # Convert predicted price to lakhs and format it properly
               predicted_price_lakhs = predicted_price / 100000
-              formatted_price = f"{predicted_price_lakhs:,.2f} Lakhs"
-      
-              # Pass only the formatted price to the SHAP plot
               fig_imp = create_shap_plot(
                   {
                       'age': age,
@@ -2184,8 +2181,9 @@ def page_prediction():
                       'fuel': fuel,
                       'transmission': transmission
                   },
-                  formatted_price  # send clean formatted price
+                  predicted_price_lakhs
               )
+
       
               # Display the SHAP plot
               st.plotly_chart(fig_imp, use_container_width=True)
