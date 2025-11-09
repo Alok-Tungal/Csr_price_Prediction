@@ -2187,10 +2187,11 @@ st.sidebar.markdown("---")
 #     st.sidebar.info("ℹ️ No trained model found — using fallback predictions")
 
 # Run the selected page function
-page_options[selected_page_name]()
+# page_options[selected_page_name]()
 
 st.markdown("---")
 st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
 #     st.info("This app uses a mock dataset for demonstration. A real-world version would be connected to a live database and a trained XGBoost regression model to provide real-time predictions and analytics.")
+
 
 
