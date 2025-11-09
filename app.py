@@ -2157,21 +2157,53 @@ def page_prediction():
             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
 
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
-        with col_r:
-            with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
-                st.plotly_chart(fig_imp, use_container_width=True)
+        # with col_r:
+        #     with st.expander("See Feature Impact", expanded=True):
+        #         fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
+        #         st.plotly_chart(fig_imp, use_container_width=True)
         
-            st.subheader("Comparable Listings (from mock data)")
-            sample_df = generate_mock_dataset()
-            similar = sample_df[(sample_df["brand"] == brand)].copy()
-            similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-            similar = similar.sort_values('similarity').head(10)
-            input_transformed = preprocessor.transform(input_data)
+        #     st.subheader("Comparable Listings (from mock data)")
+        #     sample_df = generate_mock_dataset()
+        #     similar = sample_df[(sample_df["brand"] == brand)].copy()
+        #     similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
+        #     similar = similar.sort_values('similarity').head(10)
+        #     input_transformed = preprocessor.transform(input_data)
+
+        with col_r:
+    with st.expander("See Feature Impact", expanded=True):
+        # Format final price properly (in lakhs, two decimals)
+        final_price_lakhs = predicted_price / 100000
+        formatted_price = f"{final_price_lakhs:,.2f} Lakhs"
+
+        # Pass to your SHAP plot function
+        fig_imp = create_shap_plot(
+            {
+                'age': age,
+                'km': km_driven,
+                'fuel': fuel,
+                'transmission': transmission
+            },
+            formatted_price  # only final price shown, no ₹ or Base
+        )
+
+        st.plotly_chart(fig_imp, use_container_width=True)
+
+    # --- Comparable Listings Section ---
+    st.subheader("Comparable Listings (from mock data)")
+    sample_df = generate_mock_dataset()
+
+    # Filter similar cars
+    similar = sample_df[sample_df["brand"] == brand].copy()
+    similar["similarity"] = abs(similar["price_lakhs"] - final_price_lakhs)
+    similar = similar.sort_values("similarity").head(10)
+
+    # Keep preprocessing line for later prediction extension
+    input_transformed = preprocessor.transform(input_data)
+
 
 
 # --- 5. MAIN APP LOGIC ---
-st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=     Car Price Prediction Using ANN ", use_container_width=True)
+st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text= ### Car Price Prediction Using ANN ", use_container_width=True)
 st.sidebar.markdown("### Navigation")
 page_options = {
     "Profile": page_profile,
