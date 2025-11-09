@@ -2582,7 +2582,7 @@ def page_prediction():
             st.image(
                 BRAND_IMAGES[brand],
                 caption=f"{brand} Logo/Image",
-                width=200,
+                width=700,
                 use_container_width=False
             )
         else:
@@ -2590,7 +2590,7 @@ def page_prediction():
             st.image(
                 "Car Images/placeholder.png",  # You can use your uploaded image here
                 caption="Car Image Placeholder",
-                width=200,
+                width=350,
                 use_container_width=False
             )
 
