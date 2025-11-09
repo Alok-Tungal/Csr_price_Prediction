@@ -2159,7 +2159,7 @@ def page_prediction():
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
         with col_r:
             with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission})
+                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}) 
                 st.plotly_chart(fig_imp, use_container_width=True)
         
             st.subheader("Comparable Listings (from mock data)")
