@@ -2582,16 +2582,16 @@ def page_prediction():
             st.image(
                 BRAND_IMAGES[brand],
                 caption=f"{brand} Logo/Image",
-                width=550,
-                use_container_width=True
+                width=450,
+                use_container_width=False
             )
         else:
             # Fallback placeholder image if brand not found
             st.image(
                 "Car Images/placeholder.png",  # You can use your uploaded image here
                 caption="Car Image Placeholder",
-                width=100,
-                use_container_width=True
+                width=450,
+                use_container_width=False
             )
 
     # --- Prediction Button Section ---
