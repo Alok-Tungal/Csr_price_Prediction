@@ -1898,21 +1898,70 @@ def create_shap_plot(inputs, final_price):
 
 # --- 4. PAGE FUNCTIONS (to prevent overlap) ---
 
+# def page_profile():
+#     st.title("About Me")
+#     st.title("👋 Hi, I Am Alok")
+#     col1, col2 = st.columns([2, 1])
+#     with col1:
+#         st.header("Aspiring Data Scientist • Deep Learning Project (ANN)")
+#         st.write("Dedicated to applying deep learning and Data science techniques to extract insights, visualize trends, and deploy end-to-end analytical solutions using Python and modern ML workflows.")
+#         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
+#         st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tungal)")
+#         st.markdown("---")
+#         st.subheader("Highlights")
+#         st.markdown("- Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks\n"
+#                     "- Experienced in designing and tuning neural networks using TensorFlow and Keras\n"
+#                     "- Created interactive dashboards and visual analytics using Plotly and Streamlit")
+#     with col2:
+#         st.image("https://placehold.co/100x100/0ea5a4/ffffff?text=Alok", use_container_width=True)
+
 def page_profile():
-    st.title("👋 Hi, I Am Alok")
-    col1, col2 = st.columns([2, 1])
+    # Configure layout
+    st.set_page_config(page_title="About Me", layout="wide")
+
+    # Add top margin to visually center the content
+    st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
+
+    # Centered main title and subtitle
+    st.markdown("""
+        <div style="text-align: center;">
+            <h1>👋 Hi, I Am Alok</h1>
+            <h3>Aspiring Data Scientist </h3>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # Two-column layout for content and image
+    col1, col2 = st.columns([2, 1], vertical_alignment="center")
+
     with col1:
-        st.header("Aspiring Data Scientist • Deep Learning Project (ANN)")
-        st.write("Dedicated to applying deep learning and data science techniques to extract insights, visualize trends, and deploy end-to-end analytical solutions using Python and modern ML workflows.")
+        st.write("""
+        Dedicated to applying deep learning and Data Science techniques to extract insights, visualize trends, 
+        and deploy end-to-end analytical solutions using Python and modern ML workflows.
+        """)
+
         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
-        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tungal)")
+
+        st.markdown("""
+        💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
+        💻 [GitHub](https://github.com/Alok-Tungal)
+        """)
+
         st.markdown("---")
         st.subheader("Highlights")
-        st.markdown("- Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks\n"
-                    "- Experienced in designing and tuning neural networks using TensorFlow and Keras\n"
-                    "- Created interactive dashboards and visual analytics using Plotly and Streamlit")
+        # st.markdown("""
+        # - Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks  
+        # - Experienced in designing and tuning neural networks using TensorFlow and Keras  
+        # - Created interactive dashboards and visual analytics using Plotly and Streamlit
+        # """)
+
     with col2:
-        st.image("https://placehold.co/200x200/0ea5a4/ffffff?text=Alok", use_container_width=True)
+        st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
+
+# Run function
+page_profile()
+
 
 def page_projects():
     st.title("🚀 Projects")
