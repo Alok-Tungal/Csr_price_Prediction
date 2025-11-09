@@ -1883,20 +1883,6 @@ def safe_predict(brand, model, age, km_driven, fuel, transmission, ownership):
     elif brand in ["Toyota", "Skoda", "Jeep"]: base += 3.0
     return round(max(0.5, base + np.random.normal(0, 1.0)), 2)
 
-# def create_shap_plot(inputs, final_price):
-#     """Creates a mock feature impact plot for visualization."""
-#     base_value = 10.0
-#     contributions = [-(inputs['age'] * 0.7), -(inputs['km'] / 50000), 1.2 if inputs['fuel'] == 'Diesel' else -0.3, 1.5 if inputs['transmission'] == 'Automatic' else -0.5]
-#     features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
-#     df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
-#     df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
-#     fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
-#                  title=f"<b>Feature Impact on Price</b><br>Base: Final: ₹{final_price:.2f}L",
-#                  text='Contribution', template="plotly_white")
-#     fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
-#     fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
-#     return fig
-
 def create_shap_plot(inputs: dict, final_price: float):
     """Generate a visual explanation of feature impact on predicted car price."""
     
@@ -1949,77 +1935,6 @@ def create_shap_plot(inputs: dict, final_price: float):
     )
 
     return fig
-
-
-
-# --- 4. PAGE FUNCTIONS (to prevent overlap) ---
-
-# def page_profile():
-#     st.title("About Me")
-#     st.title("👋 Hi, I Am Alok")
-#     col1, col2 = st.columns([2, 1])
-#     with col1:
-#         st.header("Aspiring Data Scientist • Deep Learning Project (ANN)")
-#         st.write("Dedicated to applying deep learning and Data science techniques to extract insights, visualize trends, and deploy end-to-end analytical solutions using Python and modern ML workflows.")
-#         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
-#         st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tungal)")
-#         st.markdown("---")
-#         st.subheader("Highlights")
-#         st.markdown("- Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks\n"
-#                     "- Experienced in designing and tuning neural networks using TensorFlow and Keras\n"
-#                     "- Created interactive dashboards and visual analytics using Plotly and Streamlit")
-#     with col2:
-#         st.image("https://placehold.co/100x100/0ea5a4/ffffff?text=Alok", use_container_width=True)
-
-# def page_profile():
-#     st.markdown("""
-#         <div style="text-align: center;">
-#             <h1> About Me </h1>
-#         </div>
-#     """, unsafe_allow_html=True)
-
-#     # Add top margin to visually center the content
-#     st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
-
-#     # Centered main title and subtitle
-#     st.markdown("""
-#         <div style="text-align: center;">
-#             <h1>👋 Hi, I Am Alok </h1>
-#                <h3>   Aspiring Data Scientist   </h3>
-#         </div>
-#     """, unsafe_allow_html=True)
-
-#     st.markdown("---")
-
-#     # Two-column layout for content and image
-#     col1, col2 = st.columns([2, 1], vertical_alignment="center")
-
-#     with col1:
-#         st.write("""
-#         Dedicated to applying deep learning and Data Science techniques to extract insights, visualize trends, 
-#         and deploy end-to-end analytical solutions using Python and modern ML workflows.
-#         """)
-
-#         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
-
-#         st.markdown("""
-#         💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
-#         💻 [GitHub](https://github.com/Alok-Tungal)
-#         """)
-
-#         st.markdown("---")
-#         st.subheader("Highlights")
-#         # st.markdown("""
-#         # - Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks  
-#         # - Experienced in designing and tuning neural networks using TensorFlow and Keras  
-#         # - Created interactive dashboards and visual analytics using Plotly and Streamlit
-#         # """)
-
-#     with col2:
-#         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
-
-# # Run function
-# page_profile()
 
 def page_profile():
     # --- HEADER ---
@@ -2080,57 +1995,6 @@ def page_profile():
         """)
 
     with col2:
-        # --- PROFILE IMAGE ---
-        # Using a placeholder is fine, just swap the URL when you have a photo.
-        # st.image("https://placehold.co/50x50/ea5a4e/ffffff?text=Alok", use_container_width=False)
-        # st.markdown(
-        #     """
-        #     <div style="text-align: center;">
-        #         <img src="https://placehold.co/100x100/ea5a4e/ffffff?text=Alok"
-        #              style="width:300px; height:300px; border-radius:50%; object-fit:cover; border:3px solid #ffffff;">
-        #     </div>
-        #     """,
-        #     unsafe_allow_html=True
-        # )
-
-     
-        # st.markdown(
-        #     """
-        #     <div style='display:flex; justify-content:center;'>
-        #         <img src='images/MY_PIC.jpg'
-        #              style='width:300px; height:300px; border-radius:50%;
-        #                     object-fit:cover; border:5px solid #ffffff;
-        #                     box-shadow: 0 0 15px rgba(0,0,0,0.3);'>
-        #     </div>
-        #     """,
-        #     unsafe_allow_html=True
-        # )
-
-       
-
-       # Create a circular image using Streamlit and CSS
-       # st.markdown(
-       #     """
-       #     <style>
-       #     .round-image {
-       #         width: 300px;
-       #         height: 300px;
-       #         border-radius: 50%;
-       #         object-fit: cover;
-       #         border: 5px solid #ffffff;
-       #         box-shadow: 0 0 15px rgba(0,0,0,0.3);
-       #     }
-       #     </style>
-       #     """,
-       #     unsafe_allow_html=True
-       # )
-       
-       # # Use st.image to display your image with a class
-       # st.image("images/MY_PIC.jpg", caption="Alok Mahadev Tungal", use_container_width=False)
-
-
-     
-     # --- Helper: convert your image file to base64 ---
       def get_base64_image(image_path):
           with open(image_path, "rb") as img_file:
               return base64.b64encode(img_file.read()).decode()
@@ -2154,39 +2018,6 @@ def page_profile():
       )
 
 
-
-
-
-
-
-
-
-# def page_projects():
-#     st.title("🚀 Projects")
-#     st.markdown("A selection of projects I've built and deployed.")
-#     with st.expander("Car Price Prediction (This App)", expanded=True):
-#         st.write("End-to-end pipeline predicting used car prices — EDA, feature-engineering, XGBoost model, deploy.")
-#         st.markdown("- Dataset: ~9k listings\n- Model: XGBoost (best) \n- Deployment: Streamlit / Hugging Face Spaces")
-
-# def page_projects():
-#     st.title("🚀 Project")
-#     st.markdown("A selection of impactful  Deep Learning, and AI projects I've built and deployed.")
-
-#     # --- Car Price Prediction (Deep Learning) ---
-#     with st.expander("🚗 Car Price Prediction using Deep Learning (This App)", expanded=True):
-#         st.write("""
-#         Developed a full end-to-end pipeline for predicting used car prices with high accuracy.
-#         Includes data cleaning, preprocessing, feature engineering, and deep neural network tuning using **Keras Tuner**.
-#         """)
-#         st.markdown("""
-#         **Highlights:**
-#         - Dataset: ~9K used car listings (Cars24 dataset)
-#         - Model: Tuned Deep Neural Network (Keras + TensorFlow)
-#         - Achieved MAE: **0.98 Lakhs**
-#         - Techniques: OneHotEncoding, Batch Normalization, Dropout, L2 Regularization
-#         - Deployment: **Streamlit** App + **Hugging Face Spaces**
-#         - Tools: Python, Pandas, Scikit-learn, TensorFlow, Plotly, Gradio, Streamlit
-#         """)
 def page_project():
     st.markdown('<div class="content-card">', unsafe_allow_html=True)
     st.subheader("🎯 Project Objective")
@@ -2281,11 +2112,9 @@ def page_prediction():
         st.header("Prediction Result")
         col_l, col_r = st.columns(2)
         with col_l:
-            # st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
-            # Convert predicted price from rupees → lakhs
             predicted_price_lakhs = predicted_price / 100000
 
-# Display formatted metric
+
             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
 
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
@@ -2293,22 +2122,12 @@ def page_prediction():
             with st.expander("See Feature Impact", expanded=True):
                 fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
                 st.plotly_chart(fig_imp, use_container_width=True)
-        
-            # st.subheader("Comparable Listings (from mock data)")
-            # sample_df = generate_mock_dataset()
-            # similar = sample_df[(sample_df["brand"] == brand)].copy()
-            # similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-            # similar = similar.sort_values('similarity').head(10)
-            # input_transformed = preprocessor.transform(input_data)
 # --- 5. MAIN APP LOGIC ---
 st.sidebar.markdown(
     "<h2 style='text-align: center; color: white; background-color:#111827; padding:10px; border-radius:8px;'>"
     "<b>Car Price Prediction Using ANN</b></h2>",
     unsafe_allow_html=True
 )
-
-
-
 st.sidebar.markdown("### Navigation")
 page_options = {
     "Profile": page_profile,
@@ -2322,8 +2141,3 @@ page_options[selected_page_name]()
 
 st.markdown("---")
 st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
-#     st.info("This app uses a mock dataset for demonstration. A real-world version would be connected to a live database and a trained XGBoost regression model to provide real-time predictions and analytics.")
-
-
-
-
