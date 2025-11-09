@@ -1788,12 +1788,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # --- 1. APP CONFIGURATION ---
-st.set_page_config(
-    page_title="Car Price Prediction & Analysis",
-    page_icon="🏎️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# st.set_page_config(
+#     page_title="Car Price Prediction & Analysis",
+#     page_icon="🏎️",
+#     layout="wide",
+#     initial_sidebar_state="expanded"
+# )
 
 # --- 2. MODEL & DATA LOADING ---
 MODEL_FILE = "car_price_predictoR.joblib"
