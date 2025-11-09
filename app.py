@@ -2022,25 +2022,45 @@ def page_profile():
 #         st.write("End-to-end pipeline predicting used car prices — EDA, feature-engineering, XGBoost model, deploy.")
 #         st.markdown("- Dataset: ~9k listings\n- Model: XGBoost (best) \n- Deployment: Streamlit / Hugging Face Spaces")
 
-def page_projects():
-    st.title("🚀 Projects")
-    st.markdown("A selection of impactful Machine Learning, Deep Learning, and AI projects I've built and deployed.")
+# def page_projects():
+#     st.title("🚀 Project")
+#     st.markdown("A selection of impactful  Deep Learning, and AI projects I've built and deployed.")
 
-    # --- Car Price Prediction (Deep Learning) ---
-    with st.expander("🚗 Car Price Prediction using Deep Learning (This App)", expanded=True):
-        st.write("""
-        Developed a full end-to-end pipeline for predicting used car prices with high accuracy.
-        Includes data cleaning, preprocessing, feature engineering, and deep neural network tuning using **Keras Tuner**.
-        """)
-        st.markdown("""
-        **Highlights:**
-        - Dataset: ~9K used car listings (Cars24 dataset)
-        - Model: Tuned Deep Neural Network (Keras + TensorFlow)
-        - Achieved MAE: **0.98 Lakhs**
-        - Techniques: OneHotEncoding, Batch Normalization, Dropout, L2 Regularization
-        - Deployment: **Streamlit** App + **Hugging Face Spaces**
-        - Tools: Python, Pandas, Scikit-learn, TensorFlow, Plotly, Gradio, Streamlit
-        """)
+#     # --- Car Price Prediction (Deep Learning) ---
+#     with st.expander("🚗 Car Price Prediction using Deep Learning (This App)", expanded=True):
+#         st.write("""
+#         Developed a full end-to-end pipeline for predicting used car prices with high accuracy.
+#         Includes data cleaning, preprocessing, feature engineering, and deep neural network tuning using **Keras Tuner**.
+#         """)
+#         st.markdown("""
+#         **Highlights:**
+#         - Dataset: ~9K used car listings (Cars24 dataset)
+#         - Model: Tuned Deep Neural Network (Keras + TensorFlow)
+#         - Achieved MAE: **0.98 Lakhs**
+#         - Techniques: OneHotEncoding, Batch Normalization, Dropout, L2 Regularization
+#         - Deployment: **Streamlit** App + **Hugging Face Spaces**
+#         - Tools: Python, Pandas, Scikit-learn, TensorFlow, Plotly, Gradio, Streamlit
+#         """)
+
+st.markdown('<div class="content-card">', unsafe_allow_html=True)
+st.subheader("🎯 Project Objective")
+st.write("""
+The primary objective of this project is to solve the problem of **price ambiguity** in the used car market.  
+We aim to develop a **machine learning model** that can accurately predict the value of a second-hand car
+based on key features like **age, brand, mileage, and fuel type**.
+""")
+
+st.subheader("💼 Business Context")
+st.write("""
+The second-hand car market is **large and rapidly growing**, but it often lacks transparency compared to the new car market.  
+This uncertainty creates challenges:
+- 🚘 **Buyers** risk **overpaying** for vehicles.  
+- 🏷️ **Sellers** risk **undervaluing** their assets.  
+A reliable prediction tool empowers stakeholders with an **unbiased, data-driven price estimate**, 
+helping build trust, enabling fairer negotiations, and streamlining transactions in the automotive industry.
+""")
+st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 def page_eda():
