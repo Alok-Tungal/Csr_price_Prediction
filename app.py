@@ -1870,7 +1870,7 @@ def safe_predict(brand, model, age, km_driven, fuel, transmission, ownership):
                                "Fuel Type": fuel, "Transmission Type": transmission, "Ownership": ownership}])
             return float(model_pipeline.predict(X)[0])
         except Exception as e:
-            st.sidebar.error(f"Model prediction error: {e}")
+            st.sidebar.error(f"Model prediction error: {e}") 
             # Fallthrough to mock
     
     base = 10.0 - (age * 0.7) - (km_driven / 50000)
