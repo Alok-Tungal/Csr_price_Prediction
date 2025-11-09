@@ -1989,7 +1989,21 @@ def page_profile():
 
         # --- SKILLS ---
         # Using st.markdown for a bolded list is clear and effective.
-        st.markdown("**Skills:** Python, Pandas, NumPy, Scikit-learn, Keras, OpenCV")
+        st.markdown('<div class="content-card">', unsafe_allow_html=True)
+        st.subheader("🛠️ Technology Stack")
+        st.write("This project leverages a modern stack of data science and web development tools:")
+        st.markdown("""
+        <div class="tech-stack-container">
+            <span class="tech-tag">🐍 Python</span>
+            <span class="tech-tag">🐼 Pandas</span>
+            <span class="tech-tag">🤖 Scikit-learn</span>
+            <span class="tech-tag">📊 Matplotlib & Seaborn</span>
+            <span class="tech-tag">🚀 Streamlit</span>
+            <span class="tech-tag">🧠 SHAP</span>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
         # --- LINKS ---
         # Icons add a nice professional touch.
