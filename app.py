@@ -1983,13 +1983,13 @@ def page_profile():
     with col1:
         # --- BIO ---
         st.write("""
-        Dedicated to applying deep learning and Data Science techniques to extract insights, visualize trends, 
+        Dedicated to applying Deep learning and Data Science techniques to extract insights, visualize trends, 
         and deploy end-to-end analytical solutions using Python and modern ML workflows.
         """)
 
         # --- SKILLS ---
         # Using st.markdown for a bolded list is clear and effective.
-        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV, Streamlit")
+        st.markdown("**Skills:** Python, Pandas, NumPy, Scikit-learn, Keras, OpenCV")
 
         # --- LINKS ---
         # Icons add a nice professional touch.
@@ -2007,7 +2007,6 @@ def page_profile():
         * Built end-to-end deep learning pipelines (EDA → ANN Model → Deployment).
         * Experienced in designing and tuning neural networks using TensorFlow and Keras.
         * Created interactive dashboards and data apps using Streamlit and Plotly.
-        * Developed computer vision models using OpenCV and YOLO.
         """)
 
     with col2:
