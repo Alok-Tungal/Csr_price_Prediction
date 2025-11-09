@@ -2236,7 +2236,7 @@ st.sidebar.markdown(
 st.sidebar.markdown("### Navigation")
 page_options = {
     "Profile": page_profile,
-    "Projects": page_projects,
+    "Projects": page_project,
     "EDA": page_eda,
     "Prediction": page_prediction
 }
