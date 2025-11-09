@@ -2177,11 +2177,74 @@ def page_eda():
             fig4 = px.box(df, x=x_col, y=y_col, title=f"{y_col} by {x_col}", template="plotly_white")
             st.plotly_chart(fig4, use_container_width=True)
 
+# def page_prediction():
+#     st.title("🔮 Car Price Prediction")
+#     st.markdown("Enter the car details below to get a price estimate.")
+    
+#     # Show the model status message ONLY on this page
+#     if not model_pipeline:
+#         st.info("ℹ️ No trained model found — using fallback prediction logic.")
+
+#     left, right = st.columns([1, 1])
+#     with left:
+#         brand = st.selectbox("Brand", ALL_BRANDS)
+#         model = st.selectbox("Model", sorted(CAR_DATA[brand].keys()))
+#         fuel = st.selectbox("Fuel Type", CAR_DATA[brand][model])
+#         transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
+#         ownership = st.selectbox("Ownership", ["First Owner", "Second Owner", "Third Owner", "Fourth+ Owner"])
+#     with right:
+#         age = st.number_input("Car Age (years)", 0, 30, 4)
+#         km_driven = st.number_input("KM Driven", 0, 500000, 45000, step=1000)
+
+#     if st.button("🚀 Predict Price", use_container_width=True):
+#         with st.spinner("Estimating price..."):
+#             predicted_price = safe_predict(brand, model, age, km_driven, fuel, transmission, ownership)
+
+#         st.markdown("---")
+#         st.header("Prediction Result")
+#         col_l, col_r = st.columns(2)
+#         with col_l:
+#             # st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
+#             # Convert predicted price from rupees → lakhs
+#             predicted_price_lakhs = predicted_price / 100000
+
+# # Display formatted metric
+#             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
+
+#             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+#         with col_r:
+#             with st.expander("See Feature Impact", expanded=True):
+#                 fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
+#                 st.plotly_chart(fig_imp, use_container_width=True)
+        
+#             st.subheader("Comparable Listings (from mock data)")
+#             sample_df = generate_mock_dataset()
+#             similar = sample_df[(sample_df["brand"] == brand)].copy()
+#             similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
+#             similar = similar.sort_values('similarity').head(10)
+#             input_transformed = preprocessor.transform(input_data)
+# # --- 5. MAIN APP LOGIC ---
+# st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text= ### Car Price Prediction Using ANN ", use_container_width=True)
+# st.sidebar.markdown("### Navigation")
+# page_options = {
+#     "Profile": page_profile,
+#     "Projects": page_projects,
+#     "EDA": page_eda,
+#     "Prediction": page_prediction
+# }
+# selected_page_name = st.sidebar.radio("", list(page_options.keys()))
+# st.sidebar.markdown("---")
+# page_options[selected_page_name]()
+
+# st.markdown("---")
+# st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
+# #     st.info("This app uses a mock dataset for demonstration. A real-world version would be connected to a live database and a trained XGBoost regression model to provide real-time predictions and analytics.")
+
+
 def page_prediction():
     st.title("🔮 Car Price Prediction")
     st.markdown("Enter the car details below to get a price estimate.")
     
-    # Show the model status message ONLY on this page
     if not model_pipeline:
         st.info("ℹ️ No trained model found — using fallback prediction logic.")
 
@@ -2202,43 +2265,29 @@ def page_prediction():
 
         st.markdown("---")
         st.header("Prediction Result")
+
         col_l, col_r = st.columns(2)
+
         with col_l:
-            # st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
             # Convert predicted price from rupees → lakhs
             predicted_price_lakhs = predicted_price / 100000
-
-# Display formatted metric
             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
-
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+
         with col_r:
+            # --- SHAP Feature Impact ---
             with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
+                fig_imp = create_shap_plot(
+                    {'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},
+                    predicted_price
+                )
                 st.plotly_chart(fig_imp, use_container_width=True)
         
+            # --- Comparable Listings ---
             st.subheader("Comparable Listings (from mock data)")
             sample_df = generate_mock_dataset()
-            similar = sample_df[(sample_df["brand"] == brand)].copy()
-            similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-            similar = similar.sort_values('similarity').head(10)
-            input_transformed = preprocessor.transform(input_data)
-# --- 5. MAIN APP LOGIC ---
-st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text= ### Car Price Prediction Using ANN ", use_container_width=True)
-st.sidebar.markdown("### Navigation")
-page_options = {
-    "Profile": page_profile,
-    "Projects": page_projects,
-    "EDA": page_eda,
-    "Prediction": page_prediction
-}
-selected_page_name = st.sidebar.radio("", list(page_options.keys()))
-st.sidebar.markdown("---")
-page_options[selected_page_name]()
-
-st.markdown("---")
-st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
-#     st.info("This app uses a mock dataset for demonstration. A real-world version would be connected to a live database and a trained XGBoost regression model to provide real-time predictions and analytics.")
-
-
+            similar = sample_df[sample_df["brand"] == brand].copy()
+            similar["similarity"] = abs(similar["price_lakhs"] - predicted_price)
+            similar = similar.sort_values("similarity").head(10)
+            # ✅ Removed undefined 'input_transformed' line
 
