@@ -2187,7 +2187,7 @@ st.sidebar.markdown("---")
 #     st.sidebar.info("ℹ️ No trained model found — using fallback predictions")
 
 # Run the selected page function
-# page_options[selected_page_name]()
+page_options[selected_page_name]()
 
 st.markdown("---")
 st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
