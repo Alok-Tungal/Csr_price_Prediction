@@ -2165,52 +2165,52 @@ def page_prediction():
 
         # ---- Feature Impact Section ----
 # ---- Feature Impact Section ----
-with col_r:
-    with st.expander("🔍 See Feature Impact", expanded=True):
-        st.write("This SHAP plot explains which features most influenced the predicted price.")
-        fig_imp = create_shap_plot({
-            'Car_Age': age,
-            'KM Driven': km_driven,
-            'Fuel Type': fuel,
-            'Transmission Type': transmission
-        }, predicted_price)
-        st.plotly_chart(fig_imp, use_container_width=True)
-
-# ---- Similar Car Listings Section ----
-st.subheader("🚘 Comparable Car Listings")
-st.write("These are the 10 most similar cars (based on brand and closest price):")
-
-# Mock comparison data
-sample_df = generate_mock_dataset()
-similar = sample_df[sample_df["brand"] == brand].copy()
-similar["similarity"] = abs(similar["price_lakhs"] - predicted_price)
-similar = similar.sort_values("similarity").head(10)
-
-# Display results in a clean table
-st.dataframe(
-    similar[["brand", "model", "fuel", "transmission", "price_lakhs"]]
-    .rename(columns={
-        "brand": "Brand",
-        "model": "Model",
-        "fuel": "Fuel Type",
-        "transmission": "Transmission",
-        "price_lakhs": "Listed Price (Lakhs)"
-    })
-)
-
-# ---- Scatter Plot: Market Comparison ----
-if not similar.empty:
-    sim_fig = px.scatter(
-        similar,
-        x="km_driven",
-        y="price_lakhs",
-        color="age",
-        size="price_lakhs",
-        hover_data=["model", "fuel"],
-        title=f"Market Comparison for '{brand}'",
-        template="plotly_white"
-    )
-    st.plotly_chart(sim_fig, use_container_width=True)
+        with col_r:
+            with st.expander("🔍 See Feature Impact", expanded=True):
+                st.write("This SHAP plot explains which features most influenced the predicted price.")
+                fig_imp = create_shap_plot({
+                    'Car_Age': age,
+                    'KM Driven': km_driven,
+                    'Fuel Type': fuel,
+                    'Transmission Type': transmission
+                }, predicted_price)
+                st.plotly_chart(fig_imp, use_container_width=True)
+        
+        # ---- Similar Car Listings Section ----
+        st.subheader("🚘 Comparable Car Listings")
+        st.write("These are the 10 most similar cars (based on brand and closest price):")
+        
+        # Mock comparison data
+        sample_df = generate_mock_dataset()
+        similar = sample_df[sample_df["brand"] == brand].copy()
+        similar["similarity"] = abs(similar["price_lakhs"] - predicted_price)
+        similar = similar.sort_values("similarity").head(10)
+        
+        # Display results in a clean table
+        st.dataframe(
+            similar[["brand", "model", "fuel", "transmission", "price_lakhs"]]
+            .rename(columns={
+                "brand": "Brand",
+                "model": "Model",
+                "fuel": "Fuel Type",
+                "transmission": "Transmission",
+                "price_lakhs": "Listed Price (Lakhs)"
+            })
+        )
+        
+        # ---- Scatter Plot: Market Comparison ----
+        if not similar.empty:
+            sim_fig = px.scatter(
+                similar,
+                x="km_driven",
+                y="price_lakhs",
+                color="age",
+                size="price_lakhs",
+                hover_data=["model", "fuel"],
+                title=f"Market Comparison for '{brand}'",
+                template="plotly_white"
+            )
+            st.plotly_chart(sim_fig, use_container_width=True)
 
 
 # --- 5. MAIN APP LOGIC ---
