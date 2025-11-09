@@ -2198,11 +2198,11 @@ st.dataframe(
 )
 
 
-        if not similar.empty:
-            sim_fig = px.scatter(similar, x="km_driven", y="price_lakhs", color="age",
-                                 size="price_lakhs", hover_data=["model", "fuel"],
-                                 title=f"Market Comparison for '{brand}'", template="plotly_white")
-            st.plotly_chart(sim_fig, use_container_width=True)
+    if not similar.empty:
+        sim_fig = px.scatter(similar, x="km_driven", y="price_lakhs", color="age",
+                             size="price_lakhs", hover_data=["model", "fuel"],
+                             title=f"Market Comparison for '{brand}'", template="plotly_white")
+        st.plotly_chart(sim_fig, use_container_width=True)
 
 # --- 5. MAIN APP LOGIC ---
 st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car Price Prediction Using ANN ", use_container_width=True)
