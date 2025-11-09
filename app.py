@@ -1905,7 +1905,7 @@ def page_profile():
         st.header("Aspiring Data Scientist • Deep Learning Project (ANN)")
         st.write("Dedicated to applying deep learning and data science techniques to extract insights, visualize trends, and deploy end-to-end analytical solutions using Python and modern ML workflows.")
         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
-        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tungal"))
+        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tungal)")
         st.markdown("---")
         st.subheader("Highlights")
         st.markdown("- Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks\n"
