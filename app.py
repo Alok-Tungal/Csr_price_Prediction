@@ -2576,7 +2576,7 @@ def page_prediction():
         if brand in BRAND_IMAGES:
             st.image(
                 BRAND_IMAGES[brand],
-                caption=f"{brand} Logo/Image",
+                caption=f"{brand} Car Image",
                 width=450,
                 use_container_width=False
             )
@@ -2594,21 +2594,36 @@ def page_prediction():
         with st.spinner("Estimating price..."):
             predicted_price = safe_predict(brand, model, age, km_driven, fuel, transmission, ownership)
 
+        # st.markdown("---")
+        # st.header("Prediction Result")
+
+        # col_l, col_r = st.columns(2)
+        # with col_l:
+        #     predicted_price_lakhs = predicted_price  # If safe_predict returns in Lakhs
+        #     st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
+        #     st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+
+        # with col_r:
+        #     with st.expander("See Feature Impact", expanded=True):
+        #         fig_imp = create_shap_plot(
+        #             {'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},
+        #             final_price=predicted_price_lakhs * 100000
+        #         )
+        #         st.plotly_chart(fig_imp, use_container_width=True)
+
         st.markdown("---")
         st.header("Prediction Result")
-
         col_l, col_r = st.columns(2)
         with col_l:
-            predicted_price_lakhs = predicted_price  # If safe_predict returns in Lakhs
-            st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
-            st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+            predicted_price_lakhs = predicted_price / 100000
 
+
+            st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
+
+            st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
         with col_r:
             with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot(
-                    {'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},
-                    final_price=predicted_price_lakhs * 100000
-                )
+                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
                 st.plotly_chart(fig_imp, use_container_width=True)
 
                 
