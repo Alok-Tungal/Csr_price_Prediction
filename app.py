@@ -2092,15 +2092,17 @@ def page_profile():
         #     unsafe_allow_html=True
         # )
         st.markdown(
-           """
-           <div style="text-align: center;">
-               <img src="images/MY_PIC.jpg"
-                    style="width:300px; height:300px; border-radius:50%; object-fit:cover;
-                           border:5px solid #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.3);">
-           </div>
-           """,
-           unsafe_allow_html=True
-       )
+            """
+            <div style='display:flex; justify-content:center;'>
+                <img src='images/MY_PIC.jpg'
+                     style='width:300px; height:300px; border-radius:50%;
+                            object-fit:cover; border:5px solid #ffffff;
+                            box-shadow: 0 0 15px rgba(0,0,0,0.3);'>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
 
 
 
