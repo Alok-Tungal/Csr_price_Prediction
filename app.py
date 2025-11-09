@@ -2228,19 +2228,14 @@ ALL_BRANDS = sorted(list(CAR_DATA.keys()))
 
 # --- NEW: Image dictionary ---
 # Using placeholders. Replace these with your actual image URLs.
+# --- Car Brand Images Mapping ---
 BRAND_IMAGES = {
-    "BMW": "https://placehold.co/400x300/003366/FFFFFF?text=BMW",
-    "Audi": "https://placehold.co/400x300/8A0707/FFFFFF?text=Audi",
-    "Mercedes": "https://placehold.co/400x300/00A1B4/FFFFFF?text=Mercedes",
-    "Maruti": "https://placehold.co/400x300/2E4090/FFFFFF?text=Maruti",
-    "Hyundai": "https://placehold.co/400x300/002C5F/FFFFFF?text=Hyundai",
-    "Tata": "https://placehold.co/400x300/003E7A/FFFFFF?text=Tata",
-    "Mahindra": "https://placehold.co/400x300/E52D27/FFFFFF?text=Mahindra",
-    "Toyota": "https://placehold.co/400x300/EB0A1E/FFFFFF?text=Toyota",
-    "Honda": "https://placehold.co/400x300/E40521/FFFFFF?text=Honda",
-    "Ford": "https://placehold.co/400x300/003478/FFFFFF?text=Ford",
-    # Add other brands as needed
+    "Audi": "images/audi.jpg",
+    "Ford": "images/ford.jpg",
+    "Jaguar": "images/jaguar.jpg",
+    "BMW": "images/BMWW.jpg"
 }
+
 
 
 # --- 3. HELPER FUNCTIONS ---
