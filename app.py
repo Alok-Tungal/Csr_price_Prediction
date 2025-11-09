@@ -2087,7 +2087,7 @@ def page_profile():
         #     """
         #     <div style="text-align: center;">
         #         <img src="https://placehold.co/100x100/ea5a4e/ffffff?text=Alok"
-        #              style="width:300px; height:380px; border-radius:50%; object-fit:cover; border:3px solid #ffffff;">
+        #              style="width:300px; height:300px; border-radius:50%; object-fit:cover; border:3px solid #ffffff;">
         #     </div>
         #     """,
         #     unsafe_allow_html=True
