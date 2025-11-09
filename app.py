@@ -2149,18 +2149,54 @@ def page_prediction():
         st.header("Prediction Result")
         col_l, col_r = st.columns(2)
         with col_l:
-            st.metric("Estimated Price", f"₹ {predicted_price:.2f} Lakhs")
+            st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
+            st.write(f"💰 Final Price: ₹ {predicted_price:.2f} Lakhs")
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
-        with col_r:
-            with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, predicted_price)
-                st.plotly_chart(fig_imp, use_container_width=True)
+        # with col_r:
+        #     with st.expander("See Feature Impact", expanded=True):
+        #         fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, predicted_price)
+        #         st.plotly_chart(fig_imp, use_container_width=True)
         
-        st.subheader("Comparable Listings (from mock data)")
-        sample_df = generate_mock_dataset()
-        similar = sample_df[(sample_df["brand"] == brand)].copy()
-        similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-        similar = similar.sort_values('similarity').head(10)
+        # st.subheader("Comparable Listings (from mock data)")
+        # sample_df = generate_mock_dataset()
+        # similar = sample_df[(sample_df["brand"] == brand)].copy()
+        # similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
+        # similar = similar.sort_values('similarity').head(10)
+
+        # ---- Feature Impact Section ----
+with col_r:
+    with st.expander("🔍 See Feature Impact", expanded=True):
+        st.write("This SHAP plot explains which features most influenced the predicted price.")
+        fig_imp = create_shap_plot({
+            'Car_Age': age,
+            'KM Driven': km_driven,
+            'Fuel Type': fuel,
+            'Transmission Type': transmission
+        }, predicted_price)
+        st.plotly_chart(fig_imp, use_container_width=True)
+
+# ---- Similar Car Listings Section ----
+st.subheader("🚘 Comparable Car Listings")
+st.write("These are the 10 most similar cars (based on brand and closest price):")
+
+# Mock comparison data
+sample_df = generate_mock_dataset()
+similar = sample_df[sample_df["brand"] == brand].copy()
+similar["similarity"] = abs(similar["price_lakhs"] - predicted_price)
+similar = similar.sort_values("similarity").head(10)
+
+# Display results in a nice table
+st.dataframe(
+    similar[["brand", "model", "fuel", "transmission", "price_lakhs"]]
+    .rename(columns={
+        "brand": "Brand",
+        "model": "Model",
+        "fuel": "Fuel Type",
+        "transmission": "Transmission",
+        "price_lakhs": "Listed Price (Lakhs)"
+    })
+)
+
 
         if not similar.empty:
             sim_fig = px.scatter(similar, x="km_driven", y="price_lakhs", color="age",
@@ -2169,7 +2205,7 @@ def page_prediction():
             st.plotly_chart(sim_fig, use_container_width=True)
 
 # --- 5. MAIN APP LOGIC ---
-st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car+Price+AI", use_container_width=True)
+st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car Price Prediction Using ANN ", use_container_width=True)
 st.sidebar.markdown("### Navigation")
 page_options = {
     "Profile": page_profile,
@@ -2189,7 +2225,7 @@ st.sidebar.markdown("---")
 page_options[selected_page_name]()
 
 st.markdown("---")
-st.caption("Built by Alok Mahadev Tungal • Car Price Prediction & Analysis • Use responsibly")
+st.caption("Built by Alok • Car Price Prediction & Analysis • Use responsibly")
 #     st.info("This app uses a mock dataset for demonstration. A real-world version would be connected to a live database and a trained XGBoost regression model to provide real-time predictions and analytics.")
 
 
