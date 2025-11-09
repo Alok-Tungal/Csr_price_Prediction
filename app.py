@@ -2591,7 +2591,7 @@ def page_prediction():
                 "Car Images/placeholder.png",  # You can use your uploaded image here
                 caption="Car Image Placeholder",
                 width=100,
-                use_container_width=True
+                use_container_width=False
             )
 
     # --- Prediction Button Section ---
