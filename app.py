@@ -2015,16 +2015,33 @@ def page_profile():
         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
 
+# def page_projects():
+#     st.title("🚀 Projects")
+#     st.markdown("A selection of projects I've built and deployed.")
+#     with st.expander("Car Price Prediction (This App)", expanded=True):
+#         st.write("End-to-end pipeline predicting used car prices — EDA, feature-engineering, XGBoost model, deploy.")
+#         st.markdown("- Dataset: ~9k listings\n- Model: XGBoost (best) \n- Deployment: Streamlit / Hugging Face Spaces")
+
 def page_projects():
     st.title("🚀 Projects")
-    st.markdown("A selection of projects I've built and deployed.")
-    with st.expander("Car Price Prediction (This App)", expanded=True):
-        st.write("End-to-end pipeline predicting used car prices — EDA, feature-engineering, XGBoost model, deploy.")
-        st.markdown("- Dataset: ~9k listings\n- Model: XGBoost (best) \n- Deployment: Streamlit / Hugging Face Spaces")
-    with st.expander("Churn Prediction"):
-        st.write("Customer churn prediction using RandomForest + feature importance analysis (SHAP).")
-    with st.expander("AQI Forecasting"):
-        st.write("Time-series forecasting using RandomForest / XGBoost and visual explanations.")
+    st.markdown("A selection of impactful Machine Learning, Deep Learning, and AI projects I've built and deployed.")
+
+    # --- Car Price Prediction (Deep Learning) ---
+    with st.expander("🚗 Car Price Prediction using Deep Learning (This App)", expanded=True):
+        st.write("""
+        Developed a full end-to-end pipeline for predicting used car prices with high accuracy.
+        Includes data cleaning, preprocessing, feature engineering, and deep neural network tuning using **Keras Tuner**.
+        """)
+        st.markdown("""
+        **Highlights:**
+        - Dataset: ~9K used car listings (Cars24 dataset)
+        - Model: Tuned Deep Neural Network (Keras + TensorFlow)
+        - Achieved MAE: **0.98 Lakhs**
+        - Techniques: OneHotEncoding, Batch Normalization, Dropout, L2 Regularization
+        - Deployment: **Streamlit** App + **Hugging Face Spaces**
+        - Tools: Python, Pandas, Scikit-learn, TensorFlow, Plotly, Gradio, Streamlit
+        """)
+
 
 def page_eda():
     st.title("📈 Exploratory Data Analysis")
