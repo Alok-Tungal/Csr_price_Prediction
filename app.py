@@ -2158,15 +2158,38 @@ def page_prediction():
 
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
         with col_r:
-            with st.expander("See Feature Impact", expanded=True):
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, predicted_price)
-                st.plotly_chart(fig_imp, use_container_width=True)
-        
-            st.subheader("Comparable Listings (from mock data)")
-            sample_df = generate_mock_dataset()
-            similar = sample_df[(sample_df["brand"] == brand)].copy()
-            similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-            similar = similar.sort_values('similarity').head(10)
+           input_transformed = preprocessor.transform(input_data)
+
+           try:
+               feature_names = preprocessor.get_feature_names_out()
+           except Exception:
+               # Fallback for older scikit-learn versions
+               num_features = list(preprocessor.named_transformers_['num'].feature_names_in_)
+               ohe_transformer = preprocessor.named_transformers_['cat']
+               cat_features_original = list(ohe_transformer.feature_names_in_)
+               cat_features_generated = []
+               for i, categories in enumerate(ohe_transformer.categories_):
+                   original_feature_name = cat_features_original[i]
+                   for category in categories:
+                       cat_features_generated.append(f"{original_feature_name}_{category}")
+               feature_names = num_features + cat_features_generated
+           
+           shap_values = explainer.shap_values(input_transformed)
+           
+           if hasattr(input_transformed, "toarray"):
+               input_transformed = input_transformed.toarray()
+                   
+           input_transformed_df = pd.DataFrame(input_transformed, columns=feature_names)
+           
+           force_plot = shap.force_plot(
+               explainer.expected_value,
+               shap_values[0, :],
+               input_transformed_df.iloc[0],
+               matplotlib=False
+           )
+           
+           shap_html = f"<head>{shap.getjs()}</head><body>{force_plot.html()}</body>"
+           st.components.v1.html(shap_html, height=250, scrolling=True)
 
 
 # --- 5. MAIN APP LOGIC ---
