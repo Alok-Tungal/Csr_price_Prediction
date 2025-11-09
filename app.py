@@ -1788,12 +1788,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # --- 1. APP CONFIGURATION ---
-# st.set_page_config(
-#     page_title="Car Price Prediction & Analysis",
-#     page_icon="🏎️",
-#     layout="wide",
-#     initial_sidebar_state="expanded"
-# )
+st.set_page_config(
+    page_title="Car Price Prediction & Analysis",
+    page_icon="🏎️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # --- 2. MODEL & DATA LOADING ---
 MODEL_FILE = "car_price_predictoR.joblib"
@@ -1899,20 +1899,20 @@ def create_shap_plot(inputs, final_price):
 # --- 4. PAGE FUNCTIONS (to prevent overlap) ---
 
 def page_profile():
-    st.title("👋 Alok Mahadev Tungal")
+    st.title("👋 Hi, I Am Alok")
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.header("Data Scientist • Machine Learning Engineer")
-        st.write("Passionate about building data-driven applications and deploying ML at scale. Expertise in Python, ML pipelines, EDA, visualization and deployment.")
-        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, XGBoost, Plotly, Streamlit, SQL")
-        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/) • 💻 [GitHub](https://github.com/)")
+        st.header("Aspiring Data Scientist • Deep Learning Project (ANN)")
+        st.write("Dedicated to applying deep learning and data science techniques to extract insights, visualize trends, and deploy end-to-end analytical solutions using Python and modern ML workflows.")
+        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
+        st.markdown("💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 💻 [GitHub](https://github.com/Alok-Tunga"))
         st.markdown("---")
         st.subheader("Highlights")
-        st.markdown("- Built end-to-end car price prediction pipeline (EDA → Model → Deployment)\n"
-                    "- Experience with XGBoost, hyperparameter tuning and model explainability\n"
-                    "- Strong visualization & dashboard skills using Plotly and Streamlit")
+        st.markdown("- Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks\n"
+                    "- Experienced in designing and tuning neural networks using TensorFlow and Keras\n"
+                    "- Created interactive dashboards and visual analytics using Plotly and Streamlit")
     with col2:
-        st.image("https://placehold.co/400x400/0ea5a4/ffffff?text=Alok", use_container_width=True)
+        st.image("https://placehold.co/200x200/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
 def page_projects():
     st.title("🚀 Projects")
