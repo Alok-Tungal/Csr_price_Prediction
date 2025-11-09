@@ -1786,6 +1786,7 @@ import joblib
 import os
 import plotly.express as px
 import plotly.graph_objects as go
+import base64
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
@@ -2108,24 +2109,50 @@ def page_profile():
        
 
        # Create a circular image using Streamlit and CSS
-       st.markdown(
-           """
-           <style>
-           .round-image {
-               width: 300px;
-               height: 300px;
-               border-radius: 50%;
-               object-fit: cover;
-               border: 5px solid #ffffff;
-               box-shadow: 0 0 15px rgba(0,0,0,0.3);
-           }
-           </style>
-           """,
-           unsafe_allow_html=True
-       )
+       # st.markdown(
+       #     """
+       #     <style>
+       #     .round-image {
+       #         width: 300px;
+       #         height: 300px;
+       #         border-radius: 50%;
+       #         object-fit: cover;
+       #         border: 5px solid #ffffff;
+       #         box-shadow: 0 0 15px rgba(0,0,0,0.3);
+       #     }
+       #     </style>
+       #     """,
+       #     unsafe_allow_html=True
+       # )
        
-       # Use st.image to display your image with a class
-       st.image("images/MY_PIC.jpg", caption="Alok Mahadev Tungal", use_container_width=False)
+       # # Use st.image to display your image with a class
+       # st.image("images/MY_PIC.jpg", caption="Alok Mahadev Tungal", use_container_width=False)
+
+
+     
+     # --- Helper: convert your image file to base64 ---
+      def get_base64_image(image_path):
+          with open(image_path, "rb") as img_file:
+              return base64.b64encode(img_file.read()).decode()
+      
+      # --- Convert your local image ---
+      image_base64 = get_base64_image("images/MY_PIC.jpg")
+      
+      # --- Display egg-shaped image ---
+      st.markdown(
+          f"""
+          <div style="text-align: center;">
+              <img src="data:image/jpeg;base64,{image_base64}"
+                   style="width:300px; height:380px; border-radius:50% / 60%; 
+                          object-fit:cover; border:5px solid #ffffff; 
+                          box-shadow:0 0 15px rgba(0,0,0,0.3);">
+              <h3 style="color:white;">Alok Mahadev Tungal</h3>
+              <p style="color:gray;">Aspiring AI & ML Engineer</p>
+          </div>
+          """,
+          unsafe_allow_html=True
+      )
+
 
 
 
