@@ -2149,8 +2149,13 @@ def page_prediction():
         st.header("Prediction Result")
         col_l, col_r = st.columns(2)
         with col_l:
-            st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
-            st.write(f"💰 Final Price: ₹ {predicted_price:.2f} Lakhs")
+            # st.metric("Estimated Price", value=round(predicted_price, 2), delta=None)
+            # Convert predicted price from rupees → lakhs
+            predicted_price_lakhs = predicted_price / 100000
+
+# Display formatted metric
+            st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
+
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
         with col_r:
             with st.expander("See Feature Impact", expanded=True):
@@ -2165,7 +2170,7 @@ def page_prediction():
 
 
 # --- 5. MAIN APP LOGIC ---
-st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car Price Prediction Using ANN ", use_container_width=True)
+st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=     Car Price Prediction Using ANN ", use_container_width=True)
 st.sidebar.markdown("### Navigation")
 page_options = {
     "Profile": page_profile,
