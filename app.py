@@ -2164,6 +2164,7 @@ def page_prediction():
         # similar = similar.sort_values('similarity').head(10)
 
         # ---- Feature Impact Section ----
+# ---- Feature Impact Section ----
 with col_r:
     with st.expander("🔍 See Feature Impact", expanded=True):
         st.write("This SHAP plot explains which features most influenced the predicted price.")
@@ -2185,7 +2186,7 @@ similar = sample_df[sample_df["brand"] == brand].copy()
 similar["similarity"] = abs(similar["price_lakhs"] - predicted_price)
 similar = similar.sort_values("similarity").head(10)
 
-# Display results in a nice table
+# Display results in a clean table
 st.dataframe(
     similar[["brand", "model", "fuel", "transmission", "price_lakhs"]]
     .rename(columns={
@@ -2197,12 +2198,20 @@ st.dataframe(
     })
 )
 
-
+# ---- Scatter Plot: Market Comparison ----
 if not similar.empty:
-    sim_fig = px.scatter(similar, x="km_driven", y="price_lakhs", color="age",
-                         size="price_lakhs", hover_data=["model", "fuel"],
-                         title=f"Market Comparison for '{brand}'", template="plotly_white")
+    sim_fig = px.scatter(
+        similar,
+        x="km_driven",
+        y="price_lakhs",
+        color="age",
+        size="price_lakhs",
+        hover_data=["model", "fuel"],
+        title=f"Market Comparison for '{brand}'",
+        template="plotly_white"
+    )
     st.plotly_chart(sim_fig, use_container_width=True)
+
 
 # --- 5. MAIN APP LOGIC ---
 st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text=Car Price Prediction Using ANN ", use_container_width=True)
