@@ -2224,10 +2224,13 @@ def page_prediction():
             # similar = similar.sort_values('similarity').head(10)
             # input_transformed = preprocessor.transform(input_data)
 # --- 5. MAIN APP LOGIC ---
-st.sidebar.image(
-    "https://placehold.co/300x80/111827/FFFFFF?text=Car+Price+Prediction+Using+ANN",
-    use_container_width=True
+st.sidebar.markdown(
+    "<h2 style='text-align: center; color: white; background-color:#111827; padding:10px; border-radius:8px;'>"
+    "<b>Car Price Prediction Using ANN</b></h2>",
+    unsafe_allow_html=True
 )
+
+
 
 st.sidebar.markdown("### Navigation")
 page_options = {
