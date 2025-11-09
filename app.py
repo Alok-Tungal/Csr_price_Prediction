@@ -2590,7 +2590,7 @@ def page_prediction():
             st.image(
                 "Car Images/placeholder.png",  # You can use your uploaded image here
                 caption="Car Image Placeholder",
-                width=700,
+                width=400,
                 use_container_width=True
             )
 
