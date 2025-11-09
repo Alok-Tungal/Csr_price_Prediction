@@ -1915,55 +1915,112 @@ def create_shap_plot(inputs, final_price):
 #     with col2:
 #         st.image("https://placehold.co/100x100/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
+# def page_profile():
+#     st.markdown("""
+#         <div style="text-align: center;">
+#             <h1> About Me </h1>
+#         </div>
+#     """, unsafe_allow_html=True)
+
+#     # Add top margin to visually center the content
+#     st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
+
+#     # Centered main title and subtitle
+#     st.markdown("""
+#         <div style="text-align: center;">
+#             <h1>👋 Hi, I Am Alok </h1>
+#                <h3>   Aspiring Data Scientist   </h3>
+#         </div>
+#     """, unsafe_allow_html=True)
+
+#     st.markdown("---")
+
+#     # Two-column layout for content and image
+#     col1, col2 = st.columns([2, 1], vertical_alignment="center")
+
+#     with col1:
+#         st.write("""
+#         Dedicated to applying deep learning and Data Science techniques to extract insights, visualize trends, 
+#         and deploy end-to-end analytical solutions using Python and modern ML workflows.
+#         """)
+
+#         st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
+
+#         st.markdown("""
+#         💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
+#         💻 [GitHub](https://github.com/Alok-Tungal)
+#         """)
+
+#         st.markdown("---")
+#         st.subheader("Highlights")
+#         # st.markdown("""
+#         # - Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks  
+#         # - Experienced in designing and tuning neural networks using TensorFlow and Keras  
+#         # - Created interactive dashboards and visual analytics using Plotly and Streamlit
+#         # """)
+
+#     with col2:
+#         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
+
+# # Run function
+# page_profile()
+
 def page_profile():
+    # --- HEADER ---
+    # Using st.markdown for centered text is a good approach here.
     st.markdown("""
         <div style="text-align: center;">
-            <h1> About Me </h1>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # Add top margin to visually center the content
-    st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
-
-    # Centered main title and subtitle
-    st.markdown("""
-        <div style="text-align: center;">
-            <h1>👋 Hi, I Am Alok</h1>
-               <h3>   Aspiring Data Scientist   </h3>
+            <h1>👋 Hi, I'm Alok</h1>
+            <h3>Aspiring Data Scientist</h3>
         </div>
     """, unsafe_allow_html=True)
 
     st.markdown("---")
 
-    # Two-column layout for content and image
+    # --- MAIN CONTENT (Two Columns) ---
     col1, col2 = st.columns([2, 1], vertical_alignment="center")
 
     with col1:
+        # --- BIO ---
         st.write("""
         Dedicated to applying deep learning and Data Science techniques to extract insights, visualize trends, 
         and deploy end-to-end analytical solutions using Python and modern ML workflows.
         """)
 
-        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV")
+        # --- SKILLS ---
+        # Using st.markdown for a bolded list is clear and effective.
+        st.markdown("**Skills:** Python, Pandas, NumPy, scikit-learn, Keras, OpenCV, Streamlit")
 
+        # --- LINKS ---
+        # Icons add a nice professional touch.
         st.markdown("""
         💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
         💻 [GitHub](https://github.com/Alok-Tungal)
         """)
-
+        
         st.markdown("---")
-        st.subheader("Highlights")
-        # st.markdown("""
-        # - Built an end-to-end deep learning pipeline (EDA → ANN Model → Deployment) for tabular data prediction tasks  
-        # - Experienced in designing and tuning neural networks using TensorFlow and Keras  
-        # - Created interactive dashboards and visual analytics using Plotly and Streamlit
-        # """)
+
+        # --- HIGHLIGHTS (Uncommented) ---
+        # This section is great for showing off your ANN and Streamlit projects.
+        st.subheader("Project Highlights")
+        st.markdown("""
+        * Built end-to-end deep learning pipelines (EDA → ANN Model → Deployment).
+        * Experienced in designing and tuning neural networks using TensorFlow and Keras.
+        * Created interactive dashboards and data apps using Streamlit and Plotly.
+        * Developed computer vision models using OpenCV and YOLO.
+        """)
 
     with col2:
+        # --- PROFILE IMAGE ---
+        # Using a placeholder is fine, just swap the URL when you have a photo.
         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
-# Run function
-page_profile()
+# --- Run the app page ---
+if __name__ == "__main__":
+    st.set_page_config(page_title="Alok's Portfolio", layout="wide")
+    page_profile()
+
+
 
 
 def page_projects():
