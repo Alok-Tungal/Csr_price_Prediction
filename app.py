@@ -1918,7 +1918,7 @@ def create_shap_plot(inputs, final_price):
 def page_profile():
     st.markdown("""
         <div style="text-align: center;">
-            <h1>👋 About Me </h1>
+            <h1> About Me </h1>
         </div>
     """, unsafe_allow_html=True)
 
@@ -1929,7 +1929,7 @@ def page_profile():
     st.markdown("""
         <div style="text-align: center;">
             <h1>👋 Hi, I Am Alok</h1>
-               <h3>Aspiring Data Scientist </h3>
+               <h3>   Aspiring Data Scientist   </h3>
         </div>
     """, unsafe_allow_html=True)
 
