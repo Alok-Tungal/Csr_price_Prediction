@@ -2167,7 +2167,7 @@ def page_prediction():
             similar = sample_df[(sample_df["brand"] == brand)].copy()
             similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
             similar = similar.sort_values('similarity').head(10)
-           input_transformed = preprocessor.transform(input_data)
+            input_transformed = preprocessor.transform(input_data)
 
 
 # --- 5. MAIN APP LOGIC ---
