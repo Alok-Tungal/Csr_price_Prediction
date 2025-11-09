@@ -2081,7 +2081,13 @@ def page_profile():
     with col2:
         # --- PROFILE IMAGE ---
         # Using a placeholder is fine, just swap the URL when you have a photo.
-        st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
+        # st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
+        st.sidebar.markdown(
+            "<h2 style='text-align:center; color:white;'>Car Price Prediction Using ANN</h2>",
+            unsafe_allow_html=True
+        )
+        # st.sidebar.image("images/alok.jpg", caption="Alok Mahadev Tungal", use_container_width=True)
+
 
 
 # def page_projects():
