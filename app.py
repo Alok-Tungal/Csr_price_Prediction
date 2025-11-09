@@ -2091,17 +2091,42 @@ def page_profile():
         #     """,
         #     unsafe_allow_html=True
         # )
-        st.markdown(
-            """
-            <div style='display:flex; justify-content:center;'>
-                <img src='images/MY_PIC.jpg'
-                     style='width:300px; height:300px; border-radius:50%;
-                            object-fit:cover; border:5px solid #ffffff;
-                            box-shadow: 0 0 15px rgba(0,0,0,0.3);'>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+
+     
+        # st.markdown(
+        #     """
+        #     <div style='display:flex; justify-content:center;'>
+        #         <img src='images/MY_PIC.jpg'
+        #              style='width:300px; height:300px; border-radius:50%;
+        #                     object-fit:cover; border:5px solid #ffffff;
+        #                     box-shadow: 0 0 15px rgba(0,0,0,0.3);'>
+        #     </div>
+        #     """,
+        #     unsafe_allow_html=True
+        # )
+
+       
+
+       # Create a circular image using Streamlit and CSS
+       st.markdown(
+           """
+           <style>
+           .round-image {
+               width: 300px;
+               height: 300px;
+               border-radius: 50%;
+               object-fit: cover;
+               border: 5px solid #ffffff;
+               box-shadow: 0 0 15px rgba(0,0,0,0.3);
+           }
+           </style>
+           """,
+           unsafe_allow_html=True
+       )
+       
+       # Use st.image to display your image with a class
+       st.image("images/MY_PIC.jpg", caption="Alok Mahadev Tungal", use_container_width=False)
+
 
 
 
