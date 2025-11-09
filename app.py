@@ -1916,8 +1916,11 @@ def create_shap_plot(inputs, final_price):
 #         st.image("https://placehold.co/100x100/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
 def page_profile():
-    # Configure layout
-    st.set_page_config(page_title="About Me", layout="wide")
+    st.markdown("""
+        <div style="text-align: center;">
+            <h1>👋 About Me </h1>
+        </div>
+    """, unsafe_allow_html=True)
 
     # Add top margin to visually center the content
     st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
@@ -1926,7 +1929,7 @@ def page_profile():
     st.markdown("""
         <div style="text-align: center;">
             <h1>👋 Hi, I Am Alok</h1>
-            <h3>Aspiring Data Scientist </h3>
+               <h3>Aspiring Data Scientist </h3>
         </div>
     """, unsafe_allow_html=True)
 
