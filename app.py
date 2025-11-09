@@ -2016,9 +2016,9 @@ def page_profile():
         st.image("https://placehold.co/250x250/0ea5a4/ffffff?text=Alok", use_container_width=True)
 
 # --- Run the app page ---
-if __name__ == "__main__":
-    st.set_page_config(page_title="Alok's Portfolio", layout="wide")
-    page_profile()
+# if __name__ == "__main__":
+#     st.set_page_config(page_title="Alok's Portfolio", layout="wide")
+#     page_profile()
 
 
 
