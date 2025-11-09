@@ -1882,19 +1882,54 @@ def safe_predict(brand, model, age, km_driven, fuel, transmission, ownership):
     elif brand in ["Toyota", "Skoda", "Jeep"]: base += 3.0
     return round(max(0.5, base + np.random.normal(0, 1.0)), 2)
 
-def create_shap_plot(inputs, final_price):
-    """Creates a mock feature impact plot for visualization."""
-    base_value = 10.0
-    contributions = [-(inputs['age'] * 0.7), -(inputs['km'] / 50000), 1.2 if inputs['fuel'] == 'Diesel' else -0.3, 1.5 if inputs['transmission'] == 'Automatic' else -0.5]
-    features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
-    df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
-    df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
-    fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
-                 title=f"<b>Feature Impact on Price</b><br>Base: ₹{base_value:.2f}L | Final: ₹{final_price:.2f}L",
-                 text='Contribution', template="plotly_white")
-    fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
-    fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
+# def create_shap_plot(inputs, final_price):
+#     """Creates a mock feature impact plot for visualization."""
+#     base_value = 10.0
+#     contributions = [-(inputs['age'] * 0.7), -(inputs['km'] / 50000), 1.2 if inputs['fuel'] == 'Diesel' else -0.3, 1.5 if inputs['transmission'] == 'Automatic' else -0.5]
+#     features = [f"Age = {inputs['age']} yrs", f"KM Driven = {inputs['km']/1000:.1f}k km", f"Fuel = {inputs['fuel']}", f"Transmission = {inputs['transmission']}"]
+#     df = pd.DataFrame({'Feature': features, 'Contribution': contributions})
+#     df['Color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
+#     fig = px.bar(df, x='Contribution', y='Feature', orientation='h',
+#                  title=f"<b>Feature Impact on Price</b><br>Base: Final: ₹{final_price:.2f}L",
+#                  text='Contribution', template="plotly_white")
+#     fig.update_traces(marker_color=df['Color'], texttemplate='%{text:.2f}', textposition='outside')
+#     fig.update_layout(yaxis=dict(autorange="reversed"), xaxis_title="Contribution to Price (in Lakhs)")
+#     return fig
+
+def create_shap_plot(inputs: dict, final_price: float):    
+    """Generate a visual explanation of feature impact on predicted car price."""
+    contributions = [
+        -(inputs['age'] * 0.7),
+        -(inputs['km'] / 50000),
+        1.2 if inputs['fuel'] == 'Diesel' else -0.3,
+        1.5 if inputs['transmission'] == 'Automatic' else -0.5
+    ]
+    features = [
+        f"Age = {inputs['age']} yrs",
+        f"KM Driven = {inputs['km']/1000:.1f}k km",
+        f"Fuel = {inputs['fuel']}",
+        f"Transmission = {inputs['transmission']}"
+    ]
+
+    df = pd.DataFrame({
+        'Feature': features,
+        'Contribution': contributions
+    })
+    df['color'] = df['Contribution'].apply(lambda x: '#2ECC71' if x >= 0 else '#E74C3C')
+
+    fig = px.bar(
+        df, x='Contribution', y='Feature', orientation='h',
+        title=f"<b>Feature Impact on Price</b><br>Final: {final_price:.2f} Lakhs",
+        text='Contribution', template="plotly_white"
+    )
+    fig.update_traces(marker_color=df['color'], texttemplate='%{text:.2f}', textposition='outside')
+    fig.update_layout(
+        yaxis=dict(autorange="reversed"),
+        xaxis_title="Contribution to Price (in Lakhs)",
+        margin=dict(l=60, r=30, t=60, b=40)
+    )
     return fig
+
 
 # --- 4. PAGE FUNCTIONS (to prevent overlap) ---
 
@@ -2157,51 +2192,17 @@ def page_prediction():
             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
 
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
-        # with col_r:
-        #     with st.expander("See Feature Impact", expanded=True):
-        #         fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
-        #         st.plotly_chart(fig_imp, use_container_width=True)
-        
-        #     st.subheader("Comparable Listings (from mock data)")
-        #     sample_df = generate_mock_dataset()
-        #     similar = sample_df[(sample_df["brand"] == brand)].copy()
-        #     similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
-        #     similar = similar.sort_values('similarity').head(10)
-        #     input_transformed = preprocessor.transform(input_data)
-
         with col_r:
-    # --- Feature Impact Section ---
-          with st.expander("See Feature Impact", expanded=True):
-              # Convert predicted price to lakhs and format it properly
-              predicted_price_lakhs = predicted_price / 100000
-              fig_imp = create_shap_plot(
-                  {
-                      'age': age,
-                      'km': km_driven,
-                      'fuel': fuel,
-                      'transmission': transmission
-                  },
-                  predicted_price_lakhs
-              )
-
-      
-              # Display the SHAP plot
-              st.plotly_chart(fig_imp, use_container_width=True)
-      
-          # --- Comparable Listings Section ---
-          st.subheader("Comparable Listings (from mock data)")
-      
-          # Generate mock data and find similar cars
-          sample_df = generate_mock_dataset()
-          similar = sample_df[(sample_df["brand"] == brand)].copy()
-          similar['similarity'] = abs(similar['price_lakhs'] - (predicted_price / 100000))
-          similar = similar.sort_values('similarity').head(10)
-      
-          # Transform input data (for downstream analysis if needed)
-          input_transformed = preprocessor.transform(input_data)
-
-
-
+            with st.expander("See Feature Impact", expanded=True):
+                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},predicted_price)
+                st.plotly_chart(fig_imp, use_container_width=True)
+        
+            st.subheader("Comparable Listings (from mock data)")
+            sample_df = generate_mock_dataset()
+            similar = sample_df[(sample_df["brand"] == brand)].copy()
+            similar['similarity'] = abs(similar['price_lakhs'] - predicted_price)
+            similar = similar.sort_values('similarity').head(10)
+            input_transformed = preprocessor.transform(input_data)
 # --- 5. MAIN APP LOGIC ---
 st.sidebar.image("https://placehold.co/300x80/111827/FFFFFF?text= ### Car Price Prediction Using ANN ", use_container_width=True)
 st.sidebar.markdown("### Navigation")
@@ -2213,13 +2214,6 @@ page_options = {
 }
 selected_page_name = st.sidebar.radio("", list(page_options.keys()))
 st.sidebar.markdown("---")
-# This is now handled inside the prediction page function
-# if model_pipeline:
-#     st.sidebar.success("✅ Trained model loaded")
-# else:
-#     st.sidebar.info("ℹ️ No trained model found — using fallback predictions")
-
-# Run the selected page function
 page_options[selected_page_name]()
 
 st.markdown("---")
