@@ -2508,55 +2508,114 @@ def page_eda():
             fig4 = px.box(df, x=x_col, y=y_col, title=f"{y_col} by {x_col}", template="plotly_white")
             st.plotly_chart(fig4, use_container_width=True)
 
+# def page_prediction():
+#     st.title("🔮 Car Price Prediction")
+#     st.markdown("Enter the car details below to get a price estimate.")
+    
+#     # Show the model status message ONLY on this page
+#     if not model_pipeline:
+#         st.info("ℹ️ No trained model found — using fallback prediction logic.")
+
+#     left, right = st.columns([1, 1])
+#     with left:
+#         brand = st.selectbox("Brand", ALL_BRANDS)
+        
+#         # --- NEW: Show brand image ---
+#         if brand in BRAND_IMAGES:
+#             st.image(BRAND_IMAGES[brand], use_container_width=True, caption=f"{brand} Logo/Image")
+        
+#         model = st.selectbox("Model", sorted(CAR_DATA[brand].keys()))
+#         fuel = st.selectbox("Fuel Type", CAR_DATA[brand][model])
+#         transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
+#         ownership = st.selectbox("Ownership", ["First Owner", "Second Owner", "Third Owner", "Fourth+ Owner"])
+        
+#     with right:
+#         age = st.number_input("Car Age (years)", 0, 30, 4)
+#         km_driven = st.number_input("KM Driven", 0, 500000, 45000, step=1000)
+      
+
+#     if st.button("🚀 Predict Price", use_container_width=True):
+#         with st.spinner("Estimating price..."):
+#             predicted_price = safe_predict(brand, model, age, km_driven, fuel, transmission, ownership)
+
+#         st.markdown("---")
+#         st.header("Prediction Result")
+#         col_l, col_r = st.columns(2)
+#         with col_l:
+#             # Assuming safe_predict returns in Lakhs, not base rupees
+#             # If safe_predict returns in rupees (e.g., 500000), uncomment the line below
+#             # predicted_price_lakhs = predicted_price / 100000 
+            
+#             predicted_price_lakhs = predicted_price # Use this if safe_predict already returns a small number like 5.0
+            
+#             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
+
+#             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+#         with col_r:
+#             with st.expander("See Feature Impact", expanded=True):
+#                 # We pass price in lakhs to the SHAP plot helper
+#                 fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, 
+#                                            final_price=predicted_price_lakhs * 100000) # Convert back to rupees for consistency if needed
+#                 st.plotly_chart(fig_imp, use_container_width=True)
+
 def page_prediction():
     st.title("🔮 Car Price Prediction")
     st.markdown("Enter the car details below to get a price estimate.")
     
-    # Show the model status message ONLY on this page
     if not model_pipeline:
         st.info("ℹ️ No trained model found — using fallback prediction logic.")
 
     left, right = st.columns([1, 1])
     with left:
         brand = st.selectbox("Brand", ALL_BRANDS)
-        
-        # --- NEW: Show brand image ---
-        if brand in BRAND_IMAGES:
-            st.image(BRAND_IMAGES[brand], use_container_width=True, caption=f"{brand} Logo/Image")
-        
         model = st.selectbox("Model", sorted(CAR_DATA[brand].keys()))
         fuel = st.selectbox("Fuel Type", CAR_DATA[brand][model])
         transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
         ownership = st.selectbox("Ownership", ["First Owner", "Second Owner", "Third Owner", "Fourth+ Owner"])
-        
+
     with right:
         age = st.number_input("Car Age (years)", 0, 30, 4)
         km_driven = st.number_input("KM Driven", 0, 500000, 45000, step=1000)
-      
 
+        # --- 🆕 Show brand image after KM Driven ---
+        if brand in BRAND_IMAGES:
+            st.image(
+                BRAND_IMAGES[brand],
+                caption=f"{brand} Logo/Image",
+                width=700,
+                use_container_width=True
+            )
+        else:
+            # Fallback placeholder image if brand not found
+            st.image(
+                "Car Images/placeholder.png",  # You can use your uploaded image here
+                caption="Car Image Placeholder",
+                width=700,
+                use_container_width=True
+            )
+
+    # --- Prediction Button Section ---
     if st.button("🚀 Predict Price", use_container_width=True):
         with st.spinner("Estimating price..."):
             predicted_price = safe_predict(brand, model, age, km_driven, fuel, transmission, ownership)
 
         st.markdown("---")
         st.header("Prediction Result")
+
         col_l, col_r = st.columns(2)
         with col_l:
-            # Assuming safe_predict returns in Lakhs, not base rupees
-            # If safe_predict returns in rupees (e.g., 500000), uncomment the line below
-            # predicted_price_lakhs = predicted_price / 100000 
-            
-            predicted_price_lakhs = predicted_price # Use this if safe_predict already returns a small number like 5.0
-            
+            predicted_price_lakhs = predicted_price  # If safe_predict returns in Lakhs
             st.metric("💰 Final Price", f"₹ {predicted_price_lakhs:,.2f} Lakhs")
-
             st.info(f"**Details:** {age} years old, {km_driven:,} km, {fuel}, {transmission}")
+
         with col_r:
             with st.expander("See Feature Impact", expanded=True):
-                # We pass price in lakhs to the SHAP plot helper
-                fig_imp = create_shap_plot({'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission}, 
-                                           final_price=predicted_price_lakhs * 100000) # Convert back to rupees for consistency if needed
+                fig_imp = create_shap_plot(
+                    {'age': age, 'km': km_driven, 'fuel': fuel, 'transmission': transmission},
+                    final_price=predicted_price_lakhs * 100000
+                )
                 st.plotly_chart(fig_imp, use_container_width=True)
+
                 
 # --- 5. MAIN APP LOGIC ---
 st.sidebar.markdown(
