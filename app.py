@@ -1796,7 +1796,7 @@ st.set_page_config(
 )
 
 # --- 2. MODEL & DATA LOADING ---
-MODEL_FILE = "car_price_predictor.pkl"
+MODEL_FILE = "car_price_predictoR.joblib"
 
 @st.cache_resource
 def load_model(path: str):
