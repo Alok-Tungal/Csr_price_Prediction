@@ -2444,11 +2444,21 @@ def page_profile():
 
         # --- HIGHLIGHTS (Uncommented) ---
         # This section is great for showing off your ANN and Streamlit projects.
+        # st.subheader("Project Highlights")
+        # st.markdown("""
+        # * Built end-to-end deep learning pipelines (EDA → ANN Model → Deployment).
+        # * Experienced in designing and tuning neural networks using TensorFlow and Keras.
+        # * Created interactive dashboards and data apps using Streamlit and Plotly.
+        # """)
         st.subheader("Project Highlights")
         st.markdown("""
-        * Built end-to-end deep learning pipelines (EDA → ANN Model → Deployment).
-        * Experienced in designing and tuning neural networks using TensorFlow and Keras.
-        * Created interactive dashboards and data apps using Streamlit and Plotly.
+        * 🚗 Developed an **Artificial Neural Network (ANN)** model to predict used car prices with high accuracy.
+        * 📊 Performed **comprehensive EDA and data preprocessing** using Pandas, NumPy, Matplotlib, and Seaborn.
+        * 🧠 Implemented **Deep Learning architecture** using TensorFlow and Keras with optimized hyperparameters.
+        * 🔍 Applied **SHAP** for model explainability to visualize feature impact on price prediction.
+        * ⚙️ Utilized **Scikit-learn** for data scaling, model evaluation, and pipeline integration.
+        * 🚀 Deployed a fully interactive **Streamlit web application** for real-time car price prediction.
+        * 💾 Designed a clean, production-ready workflow from **data ingestion → model training → deployment**.
         """)
 
     with col2:
