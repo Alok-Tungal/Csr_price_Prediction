@@ -2475,7 +2475,7 @@ def page_profile():
            </div>
        """, unsafe_allow_html=True)
        
-       st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown("<hr>", unsafe_allow_html=True)
 
 
         # --- HIGHLIGHTS (Uncommented) ---
