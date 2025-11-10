@@ -2361,7 +2361,7 @@ def page_profile():
     st.markdown("""
         <div style="text-align: center;">
             <h1>👋 Hi, I'm Alok</h1>
-                <h3>    Aspiring Data Scientist    </h3>
+                 <h3>    Aspiring Data Scientist    </h3>
         </div>
     """, unsafe_allow_html=True)
 
@@ -2380,8 +2380,8 @@ def page_profile():
         # --- SKILLS ---
         # Using st.markdown for a bolded list is clear and effective.
         st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.subheader("🛠️ Technology Stack")
-        st.write("This project leverages a powerful combination of deep learning and data science tools to build, train, and deploy an Artificial Neural Network (ANN) for car price prediction:")
+        st.subheader("🛠️**Deep Learning Project Stack**")
+        st.write("This project leverages a powerful combination of Deep Learning and Data Science tools to build, train, and deploy an Artificial Neural Network (ANN) for car price prediction:")
         # st.markdown("""
         # <div class="tech-stack-container">
         #     <span class="tech-tag">🐍 Python</span>
@@ -2420,7 +2420,7 @@ def page_profile():
            </style>
        
            <div class="tech-stack-container">
-               <span class="tech-tag">🧠 TensorFlow / Keras</span>
+               <span class="tech-tag">🧠 Keras</span>
                <span class="tech-tag">🐍 Python</span>
                <span class="tech-tag">🐼 Pandas</span>
                <span class="tech-tag">📈 NumPy</span>
@@ -2471,7 +2471,6 @@ def page_profile():
            <div class="contact-container">
                <a class="contact-link" href="https://www.linkedin.com/in/alok-tungal" target="_blank">💼 LinkedIn</a>
                <a class="contact-link" href="https://github.com/Alok-Tungal" target="_blank">💻 GitHub</a>
-               <a class="contact-link" href="mailto:aloktungal@gmail.com" target="_blank">📧 Email</a>
            </div>
        """, unsafe_allow_html=True)
        
@@ -2544,8 +2543,8 @@ def page_profile():
               """, 
               unsafe_allow_html=True
           )
-st.subheader("📬 Get in Touch")
-# (then paste the HTML code above)
+    st.subheader("📬 Get in Touch")
+  # (then paste the HTML code above)
 
 
 def page_project():
