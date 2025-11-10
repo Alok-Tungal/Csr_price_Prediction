@@ -2381,18 +2381,56 @@ def page_profile():
         # Using st.markdown for a bolded list is clear and effective.
         st.markdown('<div class="content-card">', unsafe_allow_html=True)
         st.subheader("🛠️ Technology Stack")
-        st.write("This project leverages a modern stack of data science and web development tools:")
+        st.write("This project leverages a powerful combination of deep learning and data science tools to build, train, and deploy an Artificial Neural Network (ANN) for car price prediction:")
+        # st.markdown("""
+        # <div class="tech-stack-container">
+        #     <span class="tech-tag">🐍 Python</span>
+        #     <span class="tech-tag">🐼 Pandas</span>
+        #     <span class="tech-tag">🤖 Scikit-learn</span>
+        #     <span class="tech-tag">📊 Matplotlib & Seaborn</span>
+        #     <span class="tech-tag">🚀 Streamlit</span>
+        #     <span class="tech-tag">🧠 SHAP</span>
+        # </div>
+        # """, unsafe_allow_html=True)
+        # st.markdown('</div>', unsafe_allow_html=True)
         st.markdown("""
-        <div class="tech-stack-container">
-            <span class="tech-tag">🐍 Python</span>
-            <span class="tech-tag">🐼 Pandas</span>
-            <span class="tech-tag">🤖 Scikit-learn</span>
-            <span class="tech-tag">📊 Matplotlib & Seaborn</span>
-            <span class="tech-tag">🚀 Streamlit</span>
-            <span class="tech-tag">🧠 SHAP</span>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+           <style>
+               .tech-stack-container {
+                   display: flex;
+                   flex-wrap: wrap;
+                   gap: 10px;
+                   justify-content: center;
+                   margin-top: 10px;
+               }
+               .tech-tag {
+                   background-color: #1E1E2F;
+                   color: white;
+                   padding: 8px 15px;
+                   border-radius: 25px;
+                   font-size: 15px;
+                   font-weight: 500;
+                   border: 1px solid #444;
+                   box-shadow: 0 0 8px rgba(0,0,0,0.3);
+                   transition: all 0.3s ease-in-out;
+               }
+               .tech-tag:hover {
+                   background-color: #3C3C52;
+                   transform: scale(1.05);
+               }
+           </style>
+       
+           <div class="tech-stack-container">
+               <span class="tech-tag">🧠 TensorFlow / Keras</span>
+               <span class="tech-tag">🐍 Python</span>
+               <span class="tech-tag">🐼 Pandas</span>
+               <span class="tech-tag">📈 NumPy</span>
+               <span class="tech-tag">🤖 Scikit-learn</span>
+               <span class="tech-tag">📊 Matplotlib & Seaborn</span>
+               <span class="tech-tag">🔍 SHAP</span>
+               <span class="tech-tag">🚀 Streamlit</span>
+           </div>
+       """, unsafe_allow_html=True)
+
 
 
         # --- LINKS ---
