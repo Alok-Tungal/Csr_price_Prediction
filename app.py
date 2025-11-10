@@ -2435,12 +2435,48 @@ def page_profile():
 
         # --- LINKS ---
         # Icons add a nice professional touch.
-        st.markdown("""
-        💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
-        💻 [GitHub](https://github.com/Alok-Tungal)
-        """)
+        # st.markdown("""
+        # 💼 **Contact:** [LinkedIn](https://www.linkedin.com/in/alok-tungal) • 
+        # 💻 [GitHub](https://github.com/Alok-Tungal)
+        # """)
         
-        st.markdown("---")
+        # st.markdown("---")
+
+        st.markdown("""
+           <style>
+               .contact-container {
+                   text-align: center;
+                   margin-top: 20px;
+               }
+               .contact-link {
+                   background-color: #1E1E2F;
+                   color: white;
+                   padding: 10px 18px;
+                   border-radius: 25px;
+                   font-size: 16px;
+                   font-weight: 500;
+                   margin: 5px;
+                   display: inline-block;
+                   text-decoration: none;
+                   border: 1px solid #444;
+                   box-shadow: 0 0 8px rgba(0,0,0,0.3);
+                   transition: all 0.3s ease-in-out;
+               }
+               .contact-link:hover {
+                   background-color: #3C3C52;
+                   transform: scale(1.08);
+               }
+           </style>
+       
+           <div class="contact-container">
+               <a class="contact-link" href="https://www.linkedin.com/in/alok-tungal" target="_blank">💼 LinkedIn</a>
+               <a class="contact-link" href="https://github.com/Alok-Tungal" target="_blank">💻 GitHub</a>
+               <a class="contact-link" href="mailto:aloktungal@gmail.com" target="_blank">📧 Email</a>
+           </div>
+       """, unsafe_allow_html=True)
+       
+       st.markdown("<hr>", unsafe_allow_html=True)
+
 
         # --- HIGHLIGHTS (Uncommented) ---
         # This section is great for showing off your ANN and Streamlit projects.
@@ -2460,6 +2496,7 @@ def page_profile():
         * 🚀 Deployed a fully interactive **Streamlit web application** for real-time car price prediction.
         * 💾 Designed a clean, production-ready workflow from **data ingestion → model training → deployment**.
         """)
+       
 
     with col2:
       def get_base64_image(image_path):
@@ -2507,6 +2544,8 @@ def page_profile():
               """, 
               unsafe_allow_html=True
           )
+st.subheader("📬 Get in Touch")
+# (then paste the HTML code above)
 
 
 def page_project():
